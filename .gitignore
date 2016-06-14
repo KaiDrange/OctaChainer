@@ -1,0 +1,6 @@
+*-debug/
+*-Debug/
+*-release/
+*-Release/
+**/*.pro.user*
+**/build*/*

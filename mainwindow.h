@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QAudio>
+#include <QAudioOutput>
 #include <QMediaPlayer>
 #include "audiofactory.h"
 
