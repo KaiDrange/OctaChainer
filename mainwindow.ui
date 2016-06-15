@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>789</width>
-    <height>450</height>
+    <width>849</width>
+    <height>438</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="12" column="0" colspan="13">
+    <item row="12" column="0" colspan="14">
      <widget class="QProgressBar" name="progressBar">
       <property name="value">
        <number>0</number>
@@ -38,7 +38,7 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="12">
+    <item row="8" column="13">
      <widget class="QPushButton" name="btnCreate">
       <property name="text">
        <string>Create</string>
@@ -66,14 +66,17 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="6">
+    <item row="8" column="4">
      <widget class="QLabel" name="lblSliceCOunt">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="7" rowspan="2" colspan="5">
+    <item row="0" column="0" rowspan="8" colspan="6">
+     <widget class="QListWidget" name="listSlices"/>
+    </item>
+    <item row="0" column="6" rowspan="2" colspan="6">
      <widget class="QGroupBox" name="groupAttr">
       <property name="minimumSize">
        <size>
@@ -98,7 +101,7 @@
         <widget class="QLabel" name="lblGain">
          <property name="minimumSize">
           <size>
-           <width>70</width>
+           <width>83</width>
            <height>0</height>
           </size>
          </property>
@@ -127,7 +130,7 @@
         <widget class="QLabel" name="lblBPM">
          <property name="minimumSize">
           <size>
-           <width>70</width>
+           <width>83</width>
            <height>0</height>
           </size>
          </property>
@@ -164,193 +167,271 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0" rowspan="8" colspan="7">
-     <widget class="QListWidget" name="listSlices"/>
-    </item>
-    <item row="2" column="7">
-     <widget class="QGroupBox" name="groupSliceMode">
-      <property name="minimumSize">
-       <size>
-        <width>80</width>
-        <height>90</height>
-       </size>
+    <item row="0" column="12" rowspan="8" colspan="2">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <property name="spacing">
+       <number>0</number>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>90</height>
-       </size>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
       </property>
-      <property name="title">
-       <string>Slice Mode</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="QRadioButton" name="radioSliceNormal">
-         <property name="text">
-          <string>Normal</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioSliceGrid">
-         <property name="text">
-          <string>Grid</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioSliceSteps">
-         <property name="text">
-          <string>Steps</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="12">
-     <widget class="QGroupBox" name="groupBitDepth">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>70</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Bit Depth</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QRadioButton" name="radio16">
-         <property name="text">
-          <string>16</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radio24">
-         <property name="text">
-          <string>24</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="12">
-     <widget class="QGroupBox" name="groupChannels">
-      <property name="minimumSize">
-       <size>
-        <width>80</width>
-        <height>70</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Channels</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QRadioButton" name="radioMono">
-         <property name="text">
-          <string>Mono</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioStereo">
-         <property name="text">
-          <string>Stereo</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="12">
-     <widget class="QGroupBox" name="groupSampleRate">
-      <property name="minimumSize">
-       <size>
-        <width>82</width>
-        <height>120</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>82</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Samplerate</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QRadioButton" name="radio22">
-         <property name="text">
-          <string>22050</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radio32">
-         <property name="text">
-          <string>32000</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radio44">
-         <property name="text">
-          <string>44100</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radio48">
-         <property name="text">
-          <string>48000</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="8" colspan="4">
-     <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QPushButton" name="btnAddSilence">
-        <property name="text">
-         <string>Add Silence</string>
+       <widget class="QGroupBox" name="groupBitDepth">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>70</height>
+         </size>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Bit Depth</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="radio16">
+           <property name="text">
+            <string>16</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radio24">
+           <property name="text">
+            <string>24</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="dropSlicePerSteps"/>
+       <widget class="QGroupBox" name="groupSampleRate">
+        <property name="minimumSize">
+         <size>
+          <width>82</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Samplerate</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="radio22">
+           <property name="text">
+            <string>22050</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radio32">
+           <property name="text">
+            <string>32000</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radio44">
+           <property name="text">
+            <string>44100</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radio48">
+           <property name="text">
+            <string>48000</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupChannels">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>70</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Channels</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="radioMono">
+           <property name="text">
+            <string>Mono</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioStereo">
+           <property name="text">
+            <string>Stereo</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="6" rowspan="6" colspan="6">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupSliceMode">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>90</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>110</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Slice Mode</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QRadioButton" name="radioSliceNormal">
+             <property name="text">
+              <string>Normal</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioSliceGrid">
+             <property name="text">
+              <string>Grid</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioSliceSteps">
+             <property name="text">
+              <string>Steps</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="btnAddSilence">
+          <property name="text">
+           <string>Add Silence</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="dropSlicePerSteps"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -361,8 +442,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>789</width>
-     <height>21</height>
+     <width>849</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFILE">
