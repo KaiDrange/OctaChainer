@@ -1,3 +1,5 @@
+#include <QDataStream>
+#include <QFile>
 #include "otwriter.h"
 
 const unsigned char header_bytes[] = {0x46,0x4F,0x52,0x4D,0x00,0x00,0x00,0x00,0x44,0x50,0x53,0x31,0x53,0x4D,0x50,0x41};
@@ -26,8 +28,8 @@ void OTWriter::updateData()
     bars *= 25;
     otData.trimLen = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(bars) : bars;
     otData.loopLen = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(bars) : bars;
-    otData.loop = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(loopSetting) : loopSetting;
-    otData.stretch = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(stretchSetting) : stretchSetting;
+    otData.loop = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(static_cast<uint32_t>(loopSetting)) : static_cast<uint32_t>(loopSetting);
+    otData.stretch = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(static_cast<uint32_t>(stretchSetting)) : static_cast<uint32_t>(stretchSetting);
     otData.quantize = trigQuantSetting;
     otData.gain = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ushort(gain + 48) : gain + 48;
 
@@ -77,7 +79,7 @@ void OTWriter::setChecksum()
 {
     uint16_t value = 0;
     unsigned char* bytePos = reinterpret_cast<unsigned char*>(&otData);
-    for (int i = 16; i < sizeof(otData) - 2; i++)
+    for (size_t i = 16; i < sizeof(otData) - 2; i++)
         value += bytePos[i];
 
     otData.checkSum = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ushort(value) : value;
