@@ -436,14 +436,27 @@ void MainWindow::addListItems(const QStringList files)
 
 void MainWindow::on_sliderGain_valueChanged(int value)
 {
-    QString lblText = "Gain: " + QString::number(value/2.0);
-    ui->lblGain->setText(lblText);
+    QString txtValue = QString::number(value/2.0);
+    if (txtValue != ui->txtGainValue->toPlainText())
+    {
+        ui->txtGainValue->setPlainText(txtValue);
+        QString test = ui->txtGainValue->toPlainText();
+        QTextCursor cursor = ui->txtGainValue->textCursor();
+        cursor.setPosition(txtValue.length());
+        ui->txtGainValue->setTextCursor(cursor);
+    }
 }
 
 void MainWindow::on_sliderBPM_valueChanged(int value)
 {
-    QString lblText = "BPM: " + QString::number(value/4.0);
-    ui->lblBPM->setText(lblText);
+    QString txtValue = QString::number(value/4.0);
+    if (txtValue != ui->txtBPMValue->toPlainText())
+    {
+        ui->txtBPMValue->setPlainText(QString::number(value/4.0));
+        QTextCursor cursor = ui->txtBPMValue->textCursor();
+        cursor.setPosition(txtValue.length());
+        ui->txtBPMValue->setTextCursor(cursor);
+    }
 }
 
 void MainWindow::on_radioSliceNormal_clicked()
@@ -468,4 +481,20 @@ void MainWindow::on_btnAddSilence_clicked()
 {
     ui->listSlices->addItem(SILENT_SLICE_NAME);
     updateSliceCount();
+}
+
+void MainWindow::on_txtBPMValue_textChanged()
+{
+    QString txtValue = ui->txtBPMValue->toPlainText();
+    int sliderValue = (int)(txtValue.toFloat() * 4.0 + 0.5);
+    if (sliderValue != ui->sliderBPM->value() && sliderValue >= 30*4 && sliderValue <= 300*4)
+        ui->sliderBPM->setValue(sliderValue);
+}
+
+void MainWindow::on_txtGainValue_textChanged()
+{
+    QString txtValue = ui->txtGainValue->toPlainText();
+    int sliderValue = (int)(txtValue.toFloat() * 2.0);
+    if (sliderValue != ui->sliderGain->value() && sliderValue >= -24*2 && sliderValue <= 24*2)
+        ui->sliderGain->setValue(sliderValue);
 }

@@ -4,14 +4,10 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QDataStream>
 #include <QVector>
 #include <stdint.h>
-#ifdef _WIN32
-#include <intrin.h>
-#else
-#define _byteswap_ulong __builtin_bswap32
-#define _byteswap_ushort __builtin_bswap16
-#endif
+//#include <intrin.h>
 
 #define OTFILESIZE 832
 #define SYSTEM_USE_LITTLE_ENDIAN 1

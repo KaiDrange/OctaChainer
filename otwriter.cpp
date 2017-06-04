@@ -1,5 +1,3 @@
-#include <QDataStream>
-#include <QFile>
 #include "otwriter.h"
 
 const unsigned char header_bytes[] = {0x46,0x4F,0x52,0x4D,0x00,0x00,0x00,0x00,0x44,0x50,0x53,0x31,0x53,0x4D,0x50,0x41};
@@ -22,30 +20,30 @@ OTWriter::OTWriter(const QString fileName, const int sampleRate, const Loop_t lo
 
 void OTWriter::updateData()
 {
-    otData.tempo = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(tempo*6) : tempo*6;
+    otData.tempo = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(tempo*6) : tempo*6;
     // calculate bars from BPM, sampleRate and audioLength and round off to closest .25
     int bars = ((tempo*totalSampleCount)/(sampleRate*60.0*4)) + 0.5;
     bars *= 25;
-    otData.trimLen = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(bars) : bars;
-    otData.loopLen = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(bars) : bars;
-    otData.loop = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(static_cast<uint32_t>(loopSetting)) : static_cast<uint32_t>(loopSetting);
-    otData.stretch = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(static_cast<uint32_t>(stretchSetting)) : static_cast<uint32_t>(stretchSetting);
+    otData.trimLen = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(bars) : bars;
+    otData.loopLen = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(bars) : bars;
+    otData.loop = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(loopSetting) : loopSetting;
+    otData.stretch = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(stretchSetting) : stretchSetting;
     otData.quantize = trigQuantSetting;
-    otData.gain = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ushort(gain + 48) : gain + 48;
+    otData.gain = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap16(gain + 48) : gain + 48;
 
     if (tempSlices.count() > 1)
     {
         for (int i = 0; i < tempSlices.count(); i++)
         {
-            otData.slices[i].startPoint = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(tempSlices[i].startPoint) : tempSlices[i].startPoint;
-            otData.slices[i].endPoint = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(tempSlices[i].endPoint) : tempSlices[i].endPoint;
-            otData.slices[i].loopPoint = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(tempSlices[i].loopPoint) : tempSlices[i].loopPoint;
+            otData.slices[i].startPoint = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(tempSlices[i].startPoint) : tempSlices[i].startPoint;
+            otData.slices[i].endPoint = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(tempSlices[i].endPoint) : tempSlices[i].endPoint;
+            otData.slices[i].loopPoint = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(tempSlices[i].loopPoint) : tempSlices[i].loopPoint;
         }
-        otData.sliceCount = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(tempSlices.count()) : tempSlices.count();
+        otData.sliceCount = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(tempSlices.count()) : tempSlices.count();
     }
     else
         otData.sliceCount = 0;
-    otData.trimEnd = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ulong(totalSampleCount) : totalSampleCount;
+    otData.trimEnd = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap32(totalSampleCount) : totalSampleCount;
     setChecksum();
 }
 
@@ -55,6 +53,8 @@ void OTWriter::write(uint32_t totalSamples)
     updateData();
     QFile file(fileName);
     file.open(QIODevice::WriteOnly);
+    //QDataStream outStream;
+    //outStream.setDevice(&file);
     QDataStream outStream(&file);
 
     outStream.writeRawData((char*)&otData.header, sizeof(otData.header));
@@ -79,10 +79,10 @@ void OTWriter::setChecksum()
 {
     uint16_t value = 0;
     unsigned char* bytePos = reinterpret_cast<unsigned char*>(&otData);
-    for (size_t i = 16; i < sizeof(otData) - 2; i++)
+    for (int i = 16; i < sizeof(otData) - 2; i++)
         value += bytePos[i];
 
-    otData.checkSum = SYSTEM_USE_LITTLE_ENDIAN ? _byteswap_ushort(value) : value;
+    otData.checkSum = SYSTEM_USE_LITTLE_ENDIAN ? __builtin_bswap16(value) : value;
 }
 
 void OTWriter::addSlice(uint32_t start, uint32_t end)

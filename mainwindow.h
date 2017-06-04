@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QAudioOutput>
+#include <QAudio>
 #include <QMediaPlayer>
 #include "audiofactory.h"
 
@@ -46,6 +46,10 @@ private slots:
     void on_radioSliceGrid_clicked();
     void on_radioSliceSteps_clicked();
     void on_btnAddSilence_clicked();
+
+    void on_txtBPMValue_textChanged();
+
+    void on_txtGainValue_textChanged();
 
 private:
     Ui::MainWindow *ui;

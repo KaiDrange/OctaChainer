@@ -8,7 +8,7 @@ QT       += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OctaChainer
+TARGET = OctaChainerv1_3_OSX
 TEMPLATE = app
 
 
@@ -23,7 +23,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-*-g++{
-#    message("g++")
-    LIBS+=-lsndfile
-}
+LIBS += -L$$PWD/libsndfile/lib/ -lsndfile.1
+INCLUDEPATH += $$PWD/libsndfile/include
+DEPENDPATH += $$PWD/libsndfile/include
