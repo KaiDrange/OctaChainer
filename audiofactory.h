@@ -1,6 +1,8 @@
 #ifndef AUDIOFACTORY_H
 #define AUDIOFACTORY_H
 
+#include <stdlib.h>
+#include <limits>
 #include <QObject>
 #include <QString>
 #include <QVector>
@@ -11,6 +13,7 @@
 #define SILENT_SLICE_NAME "--- silent slice (1 second in length outside grid mode) ---"
 
 enum SliceMode_t { NormalMode = 0, GridMode = 1, StepsMode = 2 };
+enum NormalizationMode_t { None = 0, Slice = 1, Chain = 2 };
 
 class AudioFactory : public QObject
 {
@@ -31,7 +34,8 @@ public:
                          const int gain,
                          const int tempo,
                          const int steps,
-                         const SliceMode_t sliceMode);
+                         const SliceMode_t sliceMode,
+                         const NormalizationMode_t normalizationMode);
 
 signals:
     void doneGenerating();
@@ -41,7 +45,8 @@ private:
     void createOutput_NormalMode();
     void createOutput_GridMode();
     void createOutput_StepsMode();
-
+    double findNormalizationFactor(SndfileHandle *file);
+    void normalizeChain();
     int buffer[BUFFER_LENGTH];
     OTWriter *otWriter;
     int currentFileNo;
@@ -59,6 +64,7 @@ private:
     int tempo;
     int steps;
     SliceMode_t sliceMode;
+    NormalizationMode_t normalizationMode;
 };
 
 #endif // AUDIOFACTORY_H

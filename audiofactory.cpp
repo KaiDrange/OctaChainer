@@ -9,6 +9,9 @@ void AudioFactory::generateFiles()
     else
         createOutput_StepsMode();
 
+    if (this->normalizationMode == NormalizationMode_t::Chain)
+        normalizeChain();
+
     emit doneGenerating();
 }
 
@@ -23,7 +26,8 @@ void AudioFactory::setUISelections(const int sampleRate,
                      const int gain,
                      const int tempo,
                      const int steps,
-                     const SliceMode_t sliceMode)
+                     const SliceMode_t sliceMode,
+                     const NormalizationMode_t normalizationMode)
 {
     this->sampleRate = sampleRate;
     this->bitRate = bitRate;
@@ -37,6 +41,7 @@ void AudioFactory::setUISelections(const int sampleRate,
     this->tempo = tempo;
     this->steps = steps;
     this->sliceMode = sliceMode;
+    this->normalizationMode = normalizationMode;
 }
 
 
@@ -72,11 +77,13 @@ void AudioFactory::createOutput_NormalMode()
 
         QByteArray ba = inName.toLocal8Bit();
         SndfileHandle inFile = SndfileHandle(ba.data());
-        memset(buffer, 0, sizeof(buffer));
         if (inFile.channels() > outFile.channels())
             convertToMono = true;
         else if (inFile.channels() < outFile.channels())
             convertToStereo = true;
+
+        double normalizationFactor = findNormalizationFactor(&inFile);
+        memset(buffer, 0, sizeof(buffer));
 
         sf_count_t readFrames = 0;
         sf_count_t sliceStartPoint = totalWrittenFrames;
@@ -97,6 +104,12 @@ void AudioFactory::createOutput_NormalMode()
         {
             while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
             {
+                if (this->normalizationMode == NormalizationMode_t::Slice)
+                {
+                    for (int i = 0; i < BUFFER_LENGTH; i++)
+                        buffer[i] = buffer[i]*normalizationFactor;
+                }
+
                 if (convertToMono)
                 {
                     for (int j = 0; j < readFrames; j+=2)
@@ -181,15 +194,23 @@ void AudioFactory::createOutput_GridMode()
 
             QByteArray ba = inName.toLocal8Bit();
             SndfileHandle inFile = SndfileHandle(ba.data());
-            memset(buffer, 0, sizeof(buffer));
             if (inFile.channels() > outFile.channels())
                 convertToMono = true;
             else if (inFile.channels() < outFile.channels())
                 convertToStereo = true;
 
+            double normalizationFactor = findNormalizationFactor(&inFile);
+
+            memset(buffer, 0, sizeof(buffer));
             sf_count_t readFrames = 0;
             while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
             {
+                if (this->normalizationMode == NormalizationMode_t::Slice)
+                {
+                    for (int i = 0; i < BUFFER_LENGTH; i++)
+                        buffer[i] = buffer[i]*normalizationFactor;
+                }
+
                 if (convertToMono)
                 {
                     for (int j = 0; j < readFrames; j+=2)
@@ -251,11 +272,14 @@ void AudioFactory::createOutput_StepsMode()
 
         QByteArray ba = inName.toLocal8Bit();
         SndfileHandle inFile = SndfileHandle(ba.data());
-        memset(buffer, 0, sizeof(buffer));
         if (inFile.channels() > outFile.channels())
             convertToMono = true;
         else if (inFile.channels() < outFile.channels())
             convertToStereo = true;
+
+        double normalizationFactor = findNormalizationFactor(&inFile);
+
+        memset(buffer, 0, sizeof(buffer));
 
         sf_count_t readFrames = 0;
         if (sourceFiles[i] == SILENT_SLICE_NAME) // add 1 sec silence
@@ -275,6 +299,12 @@ void AudioFactory::createOutput_StepsMode()
         {
             while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
             {
+                if (this->normalizationMode == NormalizationMode_t::Slice)
+                {
+                    for (int i = 0; i < BUFFER_LENGTH; i++)
+                        buffer[i] = buffer[i]*normalizationFactor;
+                }
+
                 if (convertToMono)
                 {
                     for (int j = 0; j < readFrames; j+=2)
@@ -341,4 +371,48 @@ QString AudioFactory::getFormatString(const QString &file)
     QString formatString = " [" + channelLetter;
     formatString += bitRateString + " " + QString::number(sampleRate) + "]";
     return formatString;
+}
+
+double AudioFactory::findNormalizationFactor(SndfileHandle *file)
+{
+    sf_count_t readFrames = 0;
+    int loudestValue = 0;
+    memset(buffer, 0, sizeof(buffer));
+    while ((readFrames = file->read(buffer, BUFFER_LENGTH)) > 0)
+    {
+        for (int i = 0; i < BUFFER_LENGTH; i++)
+        {
+            if (abs(buffer[i]) > loudestValue)
+                loudestValue = abs(buffer[i]);
+        }
+    }
+    file->seek(0, SEEK_SET);
+
+    double factor = 0;
+    if (loudestValue > 0)
+        factor = (std::numeric_limits<int>::max() *1.0f)/loudestValue;
+    return factor;
+}
+
+void AudioFactory::normalizeChain()
+{
+    QFile tempFile(this->outFileName);
+    QString tempFileName = this->outFileName + "_temp";
+    tempFile.rename(tempFileName);
+
+    QByteArray inNameByteArray = tempFileName.toLocal8Bit();
+    SndfileHandle inFile = SndfileHandle(inNameByteArray.data(), SFM_READ);
+
+    QByteArray outNameByteArray = this->outFileName.toLocal8Bit();
+    SndfileHandle outFile = SndfileHandle(outNameByteArray.data(), SFM_WRITE, inFile.format(), inFile.channels(), inFile.samplerate());
+    sf_count_t readFrames = 0;
+    double factor = this->findNormalizationFactor(&inFile);
+    memset(buffer, 0, sizeof(buffer));
+    while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
+    {
+        for (int i = 0; i < BUFFER_LENGTH; i++)
+            buffer[i] = buffer[i]*factor;
+        outFile.write(buffer, readFrames);
+    }
+    tempFile.remove();
 }

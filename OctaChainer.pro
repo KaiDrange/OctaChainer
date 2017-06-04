@@ -15,13 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     audiofactory.cpp \
-    otwriter.cpp
+    otwriter.cpp \
+    tabmainwidget.cpp \
+    tabmegabreakwidget.cpp
 
 HEADERS  += mainwindow.h \
     audiofactory.h \
-    otwriter.h
+    otwriter.h \
+    tabmainwidget.h \
+    tabmegabreakwidget.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    tabmainwidget.ui \
+    tabmegabreakwidget.ui
 
 LIBS += -L$$PWD/libsndfile/lib/ -lsndfile.1
 INCLUDEPATH += $$PWD/libsndfile/include
