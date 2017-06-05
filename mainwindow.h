@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "tabmainwidget.h"
+#include "tabgridwidget.h"
+#include "tabstepswidget.h"
 #include "tabmegabreakwidget.h"
 
 namespace Ui {
@@ -29,6 +31,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     TabMainWidget *mainTab;
+    TabGridWidget *gridTab;
+    TabStepsWidget *stepsTab;
     TabMegabreakWidget *megabreakTab;
     void loadFile(const QString &fileName);
     void clearProject();

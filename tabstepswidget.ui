@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TabMegabreakWidget</class>
- <widget class="QWidget" name="TabMegabreakWidget">
+ <author/>
+ <comment/>
+ <exportmacro/>
+ <class>TabStepsWidget</class>
+ <widget name="TabStepsWidget" class="QWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>710</width>
+    <width>400</width>
     <height>300</height>
    </rect>
   </property>
@@ -14,6 +16,6 @@
    <string>Form</string>
   </property>
  </widget>
- <resources/>
+ <pixmapfunction/>
  <connections/>
 </ui>

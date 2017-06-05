@@ -34,29 +34,10 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
     ui->dropQuant->addItem("Trig quant 192", TrigQuant_t::S_192);
     ui->dropQuant->addItem("Trig quant 256", TrigQuant_t::S_256);
 
-    ui->dropSlicePerSteps->addItem("Slice every 1 step", 1);
-    ui->dropSlicePerSteps->addItem("Slice every 2 steps", 2);
-    ui->dropSlicePerSteps->addItem("Slice every 3 steps", 3);
-    ui->dropSlicePerSteps->addItem("Slice every 4 steps", 4);
-    ui->dropSlicePerSteps->addItem("Slice every 6 steps", 6);
-    ui->dropSlicePerSteps->addItem("Slice every 8 steps", 8);
-    ui->dropSlicePerSteps->addItem("Slice every 12 steps", 12);
-    ui->dropSlicePerSteps->addItem("Slice every 16 steps", 16);
-    ui->dropSlicePerSteps->addItem("Slice every 24 steps", 24);
-    ui->dropSlicePerSteps->addItem("Slice every 32 steps", 32);
-    ui->dropSlicePerSteps->addItem("Slice every 48 steps", 48);
-    ui->dropSlicePerSteps->addItem("Slice every 64 steps", 64);
-    ui->dropSlicePerSteps->addItem("Slice every 96 steps", 96);
-    ui->dropSlicePerSteps->addItem("Slice every 128 steps", 128);
-    ui->dropSlicePerSteps->addItem("Slice every 192 steps", 192);
-    ui->dropSlicePerSteps->addItem("Slice every 256 steps", 256);
-    ui->dropSlicePerSteps->setCurrentIndex(11);
-
     ui->dropNormalize->addItem("No normalization", NormalizationMode_t::None);
     ui->dropNormalize->addItem("Normalize slices", NormalizationMode_t::Slice);
     ui->dropNormalize->addItem("Normalize chain", NormalizationMode_t::Chain);
 
-    ui->dropSlicePerSteps->setEnabled(false);
     ui->btnCreate->setEnabled(false);
 
     QShortcut *playHotkey = new QShortcut(QKeySequence(" "), this);
@@ -102,12 +83,8 @@ void TabMainWidget::createWav(QString filename)
     TrigQuant_t trigQuantSetting = static_cast<TrigQuant_t>(ui->dropQuant->currentData().toInt());
     int gain = ui->sliderGain->value();
     int tempo = ui->sliderBPM->value();
-    int steps = ui->dropSlicePerSteps->currentData().toInt();
+    int steps = 0;
     SliceMode_t sliceMode = SliceMode_t::NormalMode;
-    if (ui->radioSliceGrid->isChecked())
-        sliceMode = SliceMode_t::GridMode;
-    else if (ui->radioSliceSteps->isChecked())
-            sliceMode = SliceMode_t::StepsMode;
     NormalizationMode_t normalizationMode = static_cast<NormalizationMode_t>(ui->dropNormalize->currentData().toInt());
 
     QVector<QString> sourceFiles;
@@ -148,8 +125,6 @@ void TabMainWidget::updateSliceCount()
     int count = ui->listSlices->count();
     ui->lblSliceCOunt->setText(QString::number(count));
     if (count < 1)
-        ui->btnCreate->setEnabled(false);
-    else if (!ui->radioSliceGrid->isChecked() && count > 64)
         ui->btnCreate->setEnabled(false);
     else
         ui->btnCreate->setEnabled(true);
@@ -259,24 +234,6 @@ void TabMainWidget::on_sliderBPM_valueChanged(int value)
         cursor.setPosition(txtValue.length());
         ui->txtBPMValue->setTextCursor(cursor);
     }
-}
-
-void TabMainWidget::on_radioSliceNormal_clicked()
-{
-    ui->dropSlicePerSteps->setEnabled(false);
-    updateSliceCount();
-}
-
-void TabMainWidget::on_radioSliceGrid_clicked()
-{
-    ui->dropSlicePerSteps->setEnabled(false);
-    updateSliceCount();
-}
-
-void TabMainWidget::on_radioSliceSteps_clicked()
-{
-    ui->dropSlicePerSteps->setEnabled(true);
-    updateSliceCount();
 }
 
 void TabMainWidget::on_btnAddSilence_clicked()

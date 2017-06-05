@@ -39,9 +39,6 @@ private slots:
     void on_btnCreate_clicked();
     void on_sliderGain_valueChanged(int value);
     void on_sliderBPM_valueChanged(int value);
-    void on_radioSliceNormal_clicked();
-    void on_radioSliceGrid_clicked();
-    void on_radioSliceSteps_clicked();
     void on_btnAddSilence_clicked();
     void on_txtBPMValue_textChanged();
     void on_txtGainValue_textChanged();

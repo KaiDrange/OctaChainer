@@ -8,9 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     mainTab = new TabMainWidget(this);
-    ui->tabWidget->addTab(mainTab, tr("Main"));
+    ui->tabWidget->addTab(mainTab, tr("Octatrack slices"));
+    gridTab = new TabGridWidget(this);
+    ui->tabWidget->addTab(gridTab, tr("Evenly spaced grid"));
+    stepsTab = new TabStepsWidget(this);
+    ui->tabWidget->addTab(stepsTab, tr("Slice per x step of BPM"));
     megabreakTab = new TabMegabreakWidget(this);
-    ui->tabWidget->addTab(megabreakTab, tr("Megabreak"));
+    ui->tabWidget->addTab(megabreakTab, tr("Megabreak of Doom"));
 
     setAcceptDrops(true);
     readOptions();
@@ -20,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete mainTab;
+    delete gridTab;
     delete megabreakTab;
     delete ui;
 }
