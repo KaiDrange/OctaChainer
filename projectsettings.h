@@ -31,6 +31,7 @@ public:
     int tempo = 500;
     int normalizationMode = 0;
     int sliceSteps = 0;
+    bool createOTFile = false;
     QVector<QString> samplePaths;
 
 private:

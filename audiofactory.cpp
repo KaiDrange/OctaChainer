@@ -27,7 +27,8 @@ void AudioFactory::setUISelections(const int sampleRate,
                      const int tempo,
                      const int steps,
                      const SliceMode_t sliceMode,
-                     const NormalizationMode_t normalizationMode)
+                     const NormalizationMode_t normalizationMode,
+                     const bool createOTFile)
 {
     this->sampleRate = sampleRate;
     this->bitRate = bitRate;
@@ -42,6 +43,7 @@ void AudioFactory::setUISelections(const int sampleRate,
     this->steps = steps;
     this->sliceMode = sliceMode;
     this->normalizationMode = normalizationMode;
+    this->createOTFile = createOTFile;
 }
 
 
@@ -153,6 +155,14 @@ void AudioFactory::createOutput_GridMode()
     if (!atLeastOneNoneSilent)
         return;
 
+    if (createOTFile)
+    {
+        QString otName = outFileName;
+        otName.chop(4);
+        otName += ".ot";
+        otWriter = new OTWriter(otName, sampleRate, loopSetting, stretchSetting, trigQuantSetting, gain, tempo);
+    }
+
 
     SF_INFO sfinfo;
     sfinfo.channels = channels;
@@ -162,6 +172,7 @@ void AudioFactory::createOutput_GridMode()
     else
         sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
 
+    sf_count_t totalWrittenFrames = 0;
     sf_count_t sliceSize = 0;
     for (int i = 0; i < sourceFiles.count(); i++)
     {
@@ -182,6 +193,7 @@ void AudioFactory::createOutput_GridMode()
     for (int i = 0; i < sourceFiles.count(); i++)
     {
         sf_count_t writtenSliceSize = 0;
+        sf_count_t sliceStartPoint = totalWrittenFrames;
 
         if (sourceFiles[i] != SILENT_SLICE_NAME)
         {
@@ -240,6 +252,15 @@ void AudioFactory::createOutput_GridMode()
             else
                 writtenSliceSize += outFile.write(buffer, sliceSize - writtenSliceSize);
         }
+
+        totalWrittenFrames += writtenSliceSize;
+        if (createOTFile)
+            otWriter->addSlice((uint32_t)(sliceStartPoint/sfinfo.channels), (uint32_t)(totalWrittenFrames/sfinfo.channels));
+    }
+    if (createOTFile)
+    {
+        otWriter->write((uint32_t)(totalWrittenFrames/sfinfo.channels));
+        delete otWriter;
     }
 }
 

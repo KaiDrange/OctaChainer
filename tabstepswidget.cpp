@@ -118,7 +118,7 @@ void TabStepsWidget::createWav(QString filename)
 
     QThread *workThread = new QThread;
     AudioFactory *af = new AudioFactory;
-    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode);
+    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode, true);
     af->moveToThread(workThread);
     connect(workThread, SIGNAL(started()), af, SLOT(generateFiles()));
     connect(af, SIGNAL(doneGenerating()), workThread, SLOT(quit()));
@@ -324,7 +324,7 @@ void TabStepsWidget::configure(ProjectSettings &settings)
 
 void TabStepsWidget::updateCurrentSettings(ProjectSettings &settings)
 {
-    settings.modeName = settings.ModeName_Main;
+    settings.modeName = settings.ModeName_Steps;
     settings.sampleCount = ui->listSlices->count();
     settings.bitRate = ui->radio16->isChecked() ? 16 : 24;
     settings.channelCount = ui->radioMono->isChecked() ? 1 : 2;

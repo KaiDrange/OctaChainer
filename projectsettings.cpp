@@ -61,6 +61,9 @@ void ProjectSettings::loadProjectSettings(const QString projectFileName)
 
         line = findSavedProjectLine(stream, "SliceSteps:");
         this->sliceSteps = line.split(':')[1].toInt();
+
+        line = findSavedProjectLine(stream, "CreateOTFile:");
+        this->createOTFile = line.split(':')[1].toInt() > 0;
     }
     file.close();
 }
@@ -83,6 +86,7 @@ void ProjectSettings::saveProjectSettings(const QString projectFileName)
     stream << "Tempo:" << this->tempo << "\n";
     stream << "NormalizationMode:" << this->normalizationMode << "\n";
     stream << "SliceSteps:" << this->sliceSteps << "\n";
+    stream << "CreateOTFile:" << this->createOTFile << "\n";
     stream << "Slicecount:" << this->sampleCount << "\n";
     for (int i = 0; i < sampleCount; i++)
         stream << this->samplePaths[i] << "\n";

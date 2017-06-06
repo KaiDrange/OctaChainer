@@ -96,7 +96,7 @@ void TabMainWidget::createWav(QString filename)
 
     QThread *workThread = new QThread;
     AudioFactory *af = new AudioFactory;
-    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode);
+    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode, true);
     af->moveToThread(workThread);
     connect(workThread, SIGNAL(started()), af, SLOT(generateFiles()));
     connect(af, SIGNAL(doneGenerating()), workThread, SLOT(quit()));

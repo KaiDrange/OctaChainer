@@ -35,7 +35,8 @@ public:
                          const int tempo,
                          const int steps,
                          const SliceMode_t sliceMode,
-                         const NormalizationMode_t normalizationMode);
+                         const NormalizationMode_t normalizationMode,
+                         const bool createOTFile);
 
 signals:
     void doneGenerating();
@@ -65,6 +66,7 @@ private:
     int steps;
     SliceMode_t sliceMode;
     NormalizationMode_t normalizationMode;
+    bool createOTFile;
 };
 
 #endif // AUDIOFACTORY_H

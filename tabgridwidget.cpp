@@ -86,6 +86,7 @@ void TabGridWidget::createWav(QString filename)
     int steps = 0;
     SliceMode_t sliceMode = SliceMode_t::GridMode;
     NormalizationMode_t normalizationMode = static_cast<NormalizationMode_t>(ui->dropNormalize->currentData().toInt());
+    bool createOTFile = ui->chkCreateOTFile->isChecked();
 
     QVector<QString> sourceFiles;
     for (int i = 0; i < ui->listSlices->count(); i++)
@@ -96,7 +97,7 @@ void TabGridWidget::createWav(QString filename)
 
     QThread *workThread = new QThread;
     AudioFactory *af = new AudioFactory;
-    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode);
+    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode, createOTFile);
     af->moveToThread(workThread);
     connect(workThread, SIGNAL(started()), af, SLOT(generateFiles()));
     connect(af, SIGNAL(doneGenerating()), workThread, SLOT(quit()));
@@ -272,6 +273,7 @@ void TabGridWidget::reset()
     ui->dropNormalize->setCurrentIndex(0);
     on_sliderGain_valueChanged(0);
     on_sliderBPM_valueChanged(500);
+    enableDisableOTSection(false);
 }
 
 void TabGridWidget::configure(ProjectSettings &settings)
@@ -299,12 +301,15 @@ void TabGridWidget::configure(ProjectSettings &settings)
     if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
         ui->btnCreate->setEnabled(true);
 
+    ui->chkCreateOTFile->setChecked(settings.createOTFile);
+
+    enableDisableOTSection(settings.createOTFile);
     updateSliceCount();
 }
 
 void TabGridWidget::updateCurrentSettings(ProjectSettings &settings)
 {
-    settings.modeName = settings.ModeName_Main;
+    settings.modeName = settings.ModeName_Grid;
     settings.sampleCount = ui->listSlices->count();
     settings.bitRate = ui->radio16->isChecked() ? 16 : 24;
     settings.channelCount = ui->radioMono->isChecked() ? 1 : 2;
@@ -321,6 +326,26 @@ void TabGridWidget::updateCurrentSettings(ProjectSettings &settings)
     settings.gain = ui->sliderGain->value();
     settings.tempo = ui->sliderBPM->value();
     settings.normalizationMode = ui->dropNormalize->currentIndex();
+    settings.createOTFile = ui->chkCreateOTFile->isChecked();
+
     for (int i = 0; i < ui->listSlices->count(); i++)
         settings.samplePaths.append(ui->listSlices->item(i)->text());
+}
+
+void TabGridWidget::on_chkCreateOTFile_stateChanged(int value)
+{
+    bool enable = value > 0;
+    enableDisableOTSection(enable);
+
+}
+
+void TabGridWidget::enableDisableOTSection(bool enable)
+{
+    ui->dropLoop->setEnabled(enable);
+    ui->dropQuant->setEnabled(enable);
+    ui->dropStretch->setEnabled(enable);
+    ui->sliderBPM->setEnabled(enable);
+    ui->sliderGain->setEnabled(enable);
+    ui->txtBPMValue->setEnabled(enable);
+    ui->txtGainValue->setEnabled(enable);
 }

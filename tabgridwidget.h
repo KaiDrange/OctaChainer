@@ -51,12 +51,15 @@ private slots:
     void on_txtBPMValue_textChanged();
     void on_txtGainValue_textChanged();
 
+    void on_chkCreateOTFile_stateChanged(int value);
+
 private:
     Ui::TabGridWidget *ui;
     void playAudio();
     void createWav(const QString destFilename);
     void updateSliceCount();
     void addListItems(const QStringList files);
+    void enableDisableOTSection(bool enable);
     QMediaPlayer *mediaplayer;
 
 };
