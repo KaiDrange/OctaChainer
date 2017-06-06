@@ -132,8 +132,7 @@ void TabGridWidget::updateSliceCount()
 
 void TabGridWidget::on_btnAddWav_clicked()
 {
-    this->defaultPathAudio = "";
-    QStringList fileNames = QFileDialog::getOpenFileNames(this, "Select audio files", this->defaultPathAudio, "audio files (*.wav *.aif *.ogg *.flac *.iff *.svx)");
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, "Select audio files", _defaultPathAudio, "audio files (*.wav *.aif *.ogg *.flac *.iff *.svx)");
     addListItems(fileNames);
     updateSliceCount();
 }
@@ -197,7 +196,7 @@ void TabGridWidget::on_btnCreate_clicked()
 {
     if (ui->listSlices->count() > 0)
     {
-        QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", this->defaultPathOutput, "Wave file (*.wav)");
+        QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", _defaultPathOutput, "Wave file (*.wav)");
         if (!destinationFile.isEmpty())
             createWav(destinationFile);
     }
@@ -256,4 +255,72 @@ void TabGridWidget::on_txtGainValue_textChanged()
     int sliderValue = (int)(txtValue.toFloat() * 2.0);
     if (sliderValue != ui->sliderGain->value() && sliderValue >= -24*2 && sliderValue <= 24*2)
         ui->sliderGain->setValue(sliderValue);
+}
+
+void TabGridWidget::reset()
+{
+    ui->listSlices->clear();
+    ui->radio16->setChecked(true);
+    ui->radio44->setChecked(true);
+    ui->radioStereo->setChecked(true);
+    ui->dropLoop->setCurrentIndex(0);
+    ui->dropStretch->setCurrentIndex(0);
+    ui->dropQuant->setCurrentIndex(0);
+    ui->sliderGain->setValue(0);
+    ui->sliderBPM->setValue(500);
+    ui->btnCreate->setEnabled(false);
+    ui->dropNormalize->setCurrentIndex(0);
+    on_sliderGain_valueChanged(0);
+    on_sliderBPM_valueChanged(500);
+}
+
+void TabGridWidget::configure(ProjectSettings &settings)
+{
+    for (int i = 0; i < settings.sampleCount; i++)
+        ui->listSlices->addItem(settings.samplePaths[i]);
+
+    ui->radioMono->setChecked(settings.channelCount == 1);
+    if (settings.sampleRate == 32000)
+        ui->radio32->setChecked(true);
+    else if (settings.sampleRate == 22050)
+        ui->radio22->setChecked(true);
+    else if (settings.sampleRate == 48000)
+        ui->radio48->setChecked(true);
+    else
+        ui->radio44->setChecked(true);
+    ui->radio24->setChecked(settings.bitRate == 24);
+    ui->dropLoop->setCurrentIndex(settings.loopSetting);
+    ui->dropStretch->setCurrentIndex(settings.stretchSetting);
+    ui->dropQuant->setCurrentIndex(settings.trigQuantSetting);
+    ui->sliderGain->setValue(settings.gain);
+    ui->sliderBPM->setValue(settings.tempo);
+    ui->dropNormalize->setCurrentIndex(settings.normalizationMode);
+
+    if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
+        ui->btnCreate->setEnabled(true);
+
+    updateSliceCount();
+}
+
+void TabGridWidget::updateCurrentSettings(ProjectSettings &settings)
+{
+    settings.modeName = settings.ModeName_Main;
+    settings.sampleCount = ui->listSlices->count();
+    settings.bitRate = ui->radio16->isChecked() ? 16 : 24;
+    settings.channelCount = ui->radioMono->isChecked() ? 1 : 2;
+    settings.sampleRate = 44100;
+    if (ui->radio22->isChecked())
+        settings.sampleRate = 22050;
+    else if (ui->radio32->isChecked())
+        settings.sampleRate = 32000;
+    else if (ui->radio48->isChecked())
+        settings.sampleRate = 48000;
+    settings.loopSetting = ui->dropLoop->currentIndex();
+    settings.stretchSetting = ui->dropStretch->currentIndex();
+    settings.trigQuantSetting = ui->dropQuant->currentIndex();
+    settings.gain = ui->sliderGain->value();
+    settings.tempo = ui->sliderBPM->value();
+    settings.normalizationMode = ui->dropNormalize->currentIndex();
+    for (int i = 0; i < ui->listSlices->count(); i++)
+        settings.samplePaths.append(ui->listSlices->item(i)->text());
 }

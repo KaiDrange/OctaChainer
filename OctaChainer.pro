@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     tabmainwidget.cpp \
     tabmegabreakwidget.cpp \
     tabgridwidget.cpp \
-    tabstepswidget.cpp
+    tabstepswidget.cpp \
+    projectsettings.cpp
 
 HEADERS  += mainwindow.h \
     audiofactory.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     tabmainwidget.h \
     tabmegabreakwidget.h \
     tabgridwidget.h \
-    tabstepswidget.h
+    tabstepswidget.h \
+    projectsettings.h
 
 FORMS    += mainwindow.ui \
     tabmainwidget.ui \

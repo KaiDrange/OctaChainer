@@ -12,3 +12,18 @@ TabMegabreakWidget::~TabMegabreakWidget()
 {
     delete ui;
 }
+
+void TabMegabreakWidget::reset()
+{
+
+}
+
+void TabMegabreakWidget::configure(ProjectSettings &settings)
+{
+
+}
+
+void TabMegabreakWidget::updateCurrentSettings(ProjectSettings &settings)
+{
+
+}

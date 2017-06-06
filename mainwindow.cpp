@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setAcceptDrops(true);
     readOptions();
-
+    clearProject();
 }
 
 MainWindow::~MainWindow()
@@ -32,133 +32,53 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionSave_triggered()
 {
-//    QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", this->defaultPathProjects, "OctaChainer project (*.ocp)");
-//    if (!destinationFile.isEmpty())
-//    {
-//        int sliceCount = this->ui->listSlices->count();
-//        int bitRate = ui->radio16->isChecked() ? 16 : 24;
-//        int channelCount = ui->radioMono->isChecked() ? 1 : 2;
-//        int sampleRate = 44100;
-//        if (ui->radio22->isChecked())
-//            sampleRate = 22050;
-//        else if (ui->radio32->isChecked())
-//            sampleRate = 32000;
-//        else if (ui->radio48->isChecked())
-//            sampleRate = 48000;
+    QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", _defaultPathProjects, "OctaChainer project (*.ocp)");
+    if (!destinationFile.isEmpty())
+    {
+        ProjectSettings ps;
+        if (ui->tabWidget->currentIndex() == 0)
+            mainTab->updateCurrentSettings(ps);
+        else if (ui->tabWidget->currentIndex() == 1)
+            gridTab->updateCurrentSettings(ps);
+        else if (ui->tabWidget->currentIndex() == 2)
+            stepsTab->updateCurrentSettings(ps);
+        else if (ui->tabWidget->currentIndex() == 3)
+            megabreakTab->updateCurrentSettings(ps);
 
-//        SliceMode_t sliceMode = SliceMode_t::NormalMode;
-//        if (ui->radioSliceGrid->isChecked())
-//            sliceMode = SliceMode_t::GridMode;
-//        else if (ui->radioSliceSteps->isChecked())
-//            sliceMode = SliceMode_t::StepsMode;
-
-//        QFile file(destinationFile);
-//        file.open( QIODevice::WriteOnly );
-//        QTextStream stream( &file );
-//        stream << "Version:120\n";
-//        stream << "ChannelCount:" << channelCount << "\n";
-//        stream << "SampleRate:" << sampleRate << "\n";
-//        stream << "BitRate:" << bitRate << "\n";
-//        stream << "Loopsetting:" << ui->dropLoop->currentIndex() << "\n";
-//        stream << "Stretchsetting:" << ui->dropStretch->currentIndex() << "\n";
-//        stream << "TrigQuantSetting:" << ui->dropQuant->currentIndex() << "\n";
-//        stream << "Gain:" << ui->sliderGain->value() << "\n";
-//        stream << "Tempo:" << ui->sliderBPM->value() << "\n";
-//        stream << "SliceMode:" << sliceMode << "\n";
-//        stream << "SliceSteps:" << ui->dropSlicePerSteps->currentIndex() << "\n";
-//        stream << "Slicecount:" << sliceCount << "\n";
-//        for (int i = 0; i < sliceCount; i++)
-//            stream << ui->listSlices->item(i)->text() << "\n";
-//        file.close();
-//    }
-}
-
-QString MainWindow::findSavedProjectLine(QTextStream &stream, QString searchText)
-{
-    stream.seek(0);
-    QString line = NULL;
-    bool found = false;
-    while (!stream.atEnd()) {
-        line = stream.readLine();
-        if (line.contains(searchText))
-        {
-            found = true;
-            break;
-        }
+        ps.saveProjectSettings(destinationFile);
     }
-    if (!found)
-        line = "";
-    return line;
 }
+
 
 void MainWindow::on_openProject_triggered()
 {
-//    QString fileName = QFileDialog::getOpenFileName(this, "Select project file", this->defaultPathProjects, "Octachainer project file (*.ocp)");
-//    if (!fileName.isEmpty())
-//    {
-//        clearProject();
-//        QFile file(fileName);
-//        file.open(QIODevice::ReadOnly | QIODevice::Text);
-//        QTextStream stream (&file);
-
-//        int version = 0;
-//        QString line = findSavedProjectLine(stream, "Version:");
-//        if (line != "")
-//            version = line.split(':')[1].toInt();
-
-//        line = findSavedProjectLine(stream, "Slicecount:");
-//        int sampleCount = line.split(':')[1].toInt();
-
-//        for (int i = 0; i < sampleCount; i++)
-//            ui->listSlices->addItem(stream.readLine());
-
-//        line = findSavedProjectLine(stream, "ChannelCount:");
-//        ui->radioMono->setChecked(line.split(':')[1].toInt() == 1);
-
-//        line = findSavedProjectLine(stream, "SampleRate:");
-//        int bitRate = line.split(':')[1].toInt();
-//        if (bitRate == 32000)
-//            ui->radio32->setChecked(true);
-//        else if (bitRate == 22050)
-//            ui->radio22->setChecked(true);
-//        else if (bitRate == 48000)
-//            ui->radio48->setChecked(true);
-
-//        line = findSavedProjectLine(stream, "BitRate:");
-//        ui->radio24->setChecked(line.split(':')[1].toInt() == 24);
-
-//        line = findSavedProjectLine(stream, "Loopsetting:");
-//        ui->dropLoop->setCurrentIndex(line.split(':')[1].toInt());
-
-//        line = findSavedProjectLine(stream, "Stretchsetting:");
-//        ui->dropStretch->setCurrentIndex(line.split(':')[1].toInt());
-
-//        if (version >= 120)
-//        {
-//            line = findSavedProjectLine(stream, "TrigQuantSetting:");
-//            ui->dropQuant->setCurrentIndex(line.split(':')[1].toInt());
-
-//            line = findSavedProjectLine(stream, "Gain:");
-//            ui->sliderGain->setValue(line.split(':')[1].toInt());
-
-//            line = findSavedProjectLine(stream, "Tempo:");
-//            ui->sliderBPM->setValue(line.split(':')[1].toInt());
-
-//            line = findSavedProjectLine(stream, "SliceMode:");
-//            int selectedMode = line.split(':')[1].toInt();
-//            if (selectedMode == 1)
-//                ui->radioSliceGrid->setChecked(true);
-//            else if (selectedMode == 2)
-//                ui->radioSliceSteps->setChecked(true);
-
-//            line = findSavedProjectLine(stream, "SliceSteps:");
-//            ui->dropSlicePerSteps->setCurrentIndex(line.split(':')[1].toInt());
-//        }
-//        if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
-//            ui->btnCreate->setEnabled(true);
-
-//        updateSliceCount();
-//    }
+    QString fileName = QFileDialog::getOpenFileName(this, "Select project file", _defaultPathProjects, "Octachainer project file (*.ocp)");
+    if (!fileName.isEmpty())
+    {
+        clearProject();
+        ProjectSettings ps;
+        ps.loadProjectSettings(fileName);
+        if (ps.modeName == ps.ModeName_Main)
+        {
+            mainTab->configure(ps);
+            ui->tabWidget->setCurrentIndex(0);
+        }
+        else if (ps.modeName == ps.ModeName_Grid)
+        {
+            gridTab->configure(ps);
+            ui->tabWidget->setCurrentIndex(1);
+        }
+        else if (ps.modeName == ps.ModeName_Steps)
+        {
+            stepsTab->configure(ps);
+            ui->tabWidget->setCurrentIndex(2);
+        }
+        else if (ps.modeName == ps.ModeName_Megabreak)
+        {
+            gridTab->configure(ps);
+            ui->tabWidget->setCurrentIndex(3);
+        }
+    }
 }
 
 void MainWindow::on_actionNew_triggered()
@@ -168,21 +88,14 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::clearProject()
 {
-//    ui->listSlices->clear();
-//    ui->radio16->setChecked(true);
-//    ui->radio44->setChecked(true);
-//    ui->radioStereo->setChecked(true);
-//    ui->dropLoop->setCurrentIndex(0);
-//    ui->dropStretch->setCurrentIndex(0);
-//    ui->btnCreate->setEnabled(false);
-//    ui->dropSlicePerSteps->setCurrentIndex(11);
-//    ui->dropSlicePerSteps->setEnabled(false);
-//    ui->radioSliceNormal->setChecked(true);
+    mainTab->reset();
+    gridTab->reset();
+    stepsTab->reset();
 }
 
 void MainWindow::on_menuAudioPath_triggered()
 {
-    this->defaultPathAudio = QFileDialog::getExistingDirectory();
+    _defaultPathAudio = QFileDialog::getExistingDirectory();
     writeOptions();
 }
 
@@ -191,9 +104,9 @@ void MainWindow::writeOptions()
     QFile file("options.txt");
     file.open( QIODevice::WriteOnly );
     QTextStream stream( &file );
-    stream << this->defaultPathProjects << "\n";
-    stream << this->defaultPathAudio << "\n";
-    stream << this->defaultPathOutput << "\n";
+    stream << _defaultPathProjects << "\n";
+    stream << _defaultPathAudio << "\n";
+    stream << _defaultPathOutput << "\n";
     file.close();
 }
 
@@ -203,27 +116,27 @@ void MainWindow::readOptions()
     if (file.open (QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream (&file);
-        this->defaultPathProjects = stream.readLine();
-        this->defaultPathAudio = stream.readLine();
-        this->defaultPathOutput = stream.readLine();
+        _defaultPathProjects = stream.readLine();
+        _defaultPathAudio = stream.readLine();
+        _defaultPathOutput = stream.readLine();
         file.close();
     }
 }
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "OctaChainer v1.2", "Freeware tool for the Elektron Octatrack and Rytm. Created by Elektronauts user Abhoth.");
+    QMessageBox::about(this, "OctaChainer v1.3", "Freeware tool for the Elektron Octatrack and Rytm. Created by Elektronauts user Abhoth.");
 }
 
 void MainWindow::on_actionSet_projects_default_path_triggered()
 {
-    this->defaultPathProjects = QFileDialog::getExistingDirectory();
+    _defaultPathProjects = QFileDialog::getExistingDirectory();
     writeOptions();
 }
 
 void MainWindow::on_actionSet_output_default_path_triggered()
 {
-    this->defaultPathOutput = QFileDialog::getExistingDirectory();
+    _defaultPathOutput = QFileDialog::getExistingDirectory();
     writeOptions();
 }
 

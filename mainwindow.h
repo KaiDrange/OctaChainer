@@ -2,10 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "projectsettings.h"
 #include "tabmainwidget.h"
 #include "tabgridwidget.h"
 #include "tabstepswidget.h"
 #include "tabmegabreakwidget.h"
+
+extern QString _defaultPathAudio;
+extern QString _defaultPathProjects;
+extern QString _defaultPathOutput;
 
 namespace Ui {
 class MainWindow;
@@ -39,10 +44,6 @@ private:
     void writeOptions();
     void readOptions();
     QString findSavedProjectLine(QTextStream &stream, QString searchText);
-
-    QString defaultPathAudio;
-    QString defaultPathProjects;
-    QString defaultPathOutput;
 };
 
 #endif // MAINWINDOW_H

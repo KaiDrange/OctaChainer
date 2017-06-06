@@ -8,7 +8,12 @@
 #include <QMimeData>
 #include <QAudio>
 #include <QMediaPlayer>
+#include "projectsettings.h"
 #include "audiofactory.h"
+
+extern QString _defaultPathAudio;
+extern QString _defaultPathProjects;
+extern QString _defaultPathOutput;
 
 namespace Ui {
 class TabStepsWidget;
@@ -21,6 +26,9 @@ class TabStepsWidget : public QWidget
 public:
     explicit TabStepsWidget(QWidget *parent = 0);
     ~TabStepsWidget();
+    void reset();
+    void configure(ProjectSettings &settings);
+    void updateCurrentSettings(ProjectSettings &settings);
 
 public slots:
     void updateProgressBar(int currentSlice, int totalSlices);
@@ -49,10 +57,6 @@ private:
     void updateSliceCount();
     void addListItems(const QStringList files);
     QMediaPlayer *mediaplayer;
-    QString defaultPathAudio;
-    QString defaultPathProjects;
-    QString defaultPathOutput;
-
 
 };
 

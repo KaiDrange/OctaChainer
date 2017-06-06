@@ -604,6 +604,21 @@ selection-background-color: rgb(170, 170, 127);</string>
     <enum>Qt::ElideRight</enum>
    </property>
   </widget>
+  <zorder>btnAddSilence</zorder>
+  <zorder>btnRemove</zorder>
+  <zorder>btnAddWav</zorder>
+  <zorder>btnPlay</zorder>
+  <zorder>groupBox_3</zorder>
+  <zorder>btnCreate</zorder>
+  <zorder>graphicsView_2</zorder>
+  <zorder>groupBox_2</zorder>
+  <zorder>groupBox_4</zorder>
+  <zorder>btnStop</zorder>
+  <zorder>progressBar</zorder>
+  <zorder>dropNormalize</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>listSlices</zorder>
+  <zorder>lblSliceCOunt</zorder>
  </widget>
  <resources/>
  <connections/>
