@@ -8,7 +8,14 @@ QT       += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OctaChainerv1_3_OSX
+macx{
+    TARGET = OctaChainerv1_3_OSX
+}
+else
+{
+    TARGET = OctaChainer
+}
+
 TEMPLATE = app
 
 
@@ -37,6 +44,12 @@ FORMS    += mainwindow.ui \
     tabgridwidget.ui \
     tabstepswidget.ui
 
-LIBS += -L$$PWD/libsndfile/lib/ -lsndfile.1
-INCLUDEPATH += $$PWD/libsndfile/include
-DEPENDPATH += $$PWD/libsndfile/include
+macx{
+    LIBS += -L$$PWD/libsndfile/lib/ -lsndfile.1
+    INCLUDEPATH += $$PWD/libsndfile/include
+    DEPENDPATH += $$PWD/libsndfile/include
+}else{
+    *-g++{
+        LIBS+=-lsndfile
+    }
+}
