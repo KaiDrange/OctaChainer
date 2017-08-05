@@ -35,28 +35,29 @@ public slots:
     void updateUIafterCreateDone();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
 
 private slots:
-    void on_btnAddWav_clicked();
     void on_btnPlay_clicked();
     void on_btnStop_clicked();
-    void on_listSlices_doubleClicked(const QModelIndex &index);
-    void on_btnRemove_clicked();
     void on_btnCreate_clicked();
     void on_sliderGain_valueChanged(int value);
     void on_sliderBPM_valueChanged(int value);
     void on_txtBPMValue_textChanged();
     void on_txtGainValue_textChanged();
+    void on_btnSelectFile_clicked();
+
+    void on_dropSlicePerSteps_currentIndexChanged(int index);
+
+    void on_chkTail_stateChanged(int arg1);
 
 private:
     Ui::TabStepsWidget *ui;
     void playAudio();
-    void createWav(const QString destFilename);
+    void createOTFile();
     void updateSliceCount();
-    void addListItems(const QStringList files);
     QMediaPlayer *mediaplayer;
+    int sliceCount;
+    bool hasTail;
 
 };
 

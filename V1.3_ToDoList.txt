@@ -1,4 +1,4 @@
 * Add fade in/out options for relevant modes
-* Change GUI for Step mode to something that makes more sense for that mode
+* Change GUI for Step mode to something that makes more sense for that mode - Done (but not properly tested)
 * Add the Megabreak mode
 * Write some kind of manual or guide

@@ -25,6 +25,8 @@ void ProjectSettings::loadProjectSettings(const QString projectFileName)
         this->modeName = line.split(':')[1];
         line = findSavedProjectLine(stream, "NormalizationMode:");
         this->normalizationMode = line.split(':')[1].toInt();
+        line = findSavedProjectLine(stream, "IncludeTail:");
+        this->includeTail = line.split(':')[1] == "1";
     }
 
     line = findSavedProjectLine(stream, "Slicecount:");
@@ -87,6 +89,7 @@ void ProjectSettings::saveProjectSettings(const QString projectFileName)
     stream << "NormalizationMode:" << this->normalizationMode << "\n";
     stream << "SliceSteps:" << this->sliceSteps << "\n";
     stream << "CreateOTFile:" << this->createOTFile << "\n";
+    stream << "IncludeTail:" << this->includeTail << "\n";
     stream << "Slicecount:" << this->sampleCount << "\n";
     for (int i = 0; i < sampleCount; i++)
         stream << this->samplePaths[i] << "\n";

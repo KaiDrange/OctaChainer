@@ -23,6 +23,7 @@ public slots:
     void generateFiles();
 public:
     static QString getFormatString(const QString &file);
+    static void getStepsModeSliceCount(const int stepsPerSlice, const int tempo, bool includeTail, const QString &file, int &sliceCount, bool &hasTail);
     void setUISelections(const int sampleRate,
                          const int bitRate,
                          const int channels,
@@ -38,6 +39,14 @@ public:
                          const NormalizationMode_t normalizationMode,
                          const bool createOTFile);
 
+    void setStepsModeUISelections(const QString &sourcefile,
+                        const Loop_t loopSetting,
+                        const Stretch_t stretchSetting,
+                        const TrigQuant_t trigQuantSetting,
+                        const int gain,
+                        const int tempo,
+                        const int steps,
+                        const bool includeTail);
 signals:
     void doneGenerating();
     void fileProgress(int currentSlice, int totalSlices);
@@ -67,6 +76,7 @@ private:
     SliceMode_t sliceMode;
     NormalizationMode_t normalizationMode;
     bool createOTFile;
+    bool includeTail;
 };
 
 #endif // AUDIOFACTORY_H

@@ -32,6 +32,7 @@ public:
     int normalizationMode = 0;
     int sliceSteps = 0;
     bool createOTFile = false;
+    bool includeTail = true;
     QVector<QString> samplePaths;
 
 private:
