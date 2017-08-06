@@ -37,6 +37,8 @@ public:
                          const int steps,
                          const SliceMode_t sliceMode,
                          const NormalizationMode_t normalizationMode,
+                         const int fadeIn,
+                         const int fadeOut,
                          const bool createOTFile);
 
     void setStepsModeUISelections(const QString &sourcefile,
@@ -57,6 +59,7 @@ private:
     void createOutput_StepsMode();
     double findNormalizationFactor(SndfileHandle *file);
     void normalizeChain();
+    void createFadeCurves(const int fadeInCurveLength, const int fadeOutCurveLength, float fadeInCurve[], float fadeOutCurve[]);
     int buffer[BUFFER_LENGTH];
     OTWriter *otWriter;
     int currentFileNo;
@@ -77,6 +80,8 @@ private:
     NormalizationMode_t normalizationMode;
     bool createOTFile;
     bool includeTail;
+    int fadeIn_ms;
+    int fadeOut_ms;
 };
 
 #endif // AUDIOFACTORY_H

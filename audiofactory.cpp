@@ -28,6 +28,8 @@ void AudioFactory::setUISelections(const int sampleRate,
                      const int steps,
                      const SliceMode_t sliceMode,
                      const NormalizationMode_t normalizationMode,
+                     const int fadeIn,
+                     const int fadeOut,
                      const bool createOTFile)
 {
     this->sampleRate = sampleRate;
@@ -43,6 +45,8 @@ void AudioFactory::setUISelections(const int sampleRate,
     this->steps = steps;
     this->sliceMode = sliceMode;
     this->normalizationMode = normalizationMode;
+    this->fadeIn_ms = fadeIn;
+    this->fadeOut_ms = fadeOut;
     this->createOTFile = createOTFile;
 }
 
@@ -84,6 +88,9 @@ void AudioFactory::setStepsModeUISelections(const QString &sourcefile,
 
 void AudioFactory::createOutput_NormalMode()
 {
+    if (sourceFiles.count() == 0 || sourceFiles.count() > 64)
+        return;
+
     SF_INFO sfinfo;
     sfinfo.channels = channels;
     sfinfo.samplerate = sampleRate;
@@ -97,12 +104,15 @@ void AudioFactory::createOutput_NormalMode()
     otName += ".ot";
     otWriter = new OTWriter(otName, sampleRate, loopSetting, stretchSetting, trigQuantSetting, gain, tempo);
 
+    int fadeInCurveLength = sfinfo.samplerate*fadeIn_ms/1000;
+    int fadeOutCurveLength = sfinfo.samplerate*fadeOut_ms/1000;
+    float fadeInCurve[fadeInCurveLength];
+    float fadeOutCurve[fadeOutCurveLength];
+    createFadeCurves(fadeInCurveLength, fadeOutCurveLength, fadeInCurve, fadeOutCurve);
+
     QByteArray outNameByteArray = outFileName.toLocal8Bit();
     SndfileHandle outFile = SndfileHandle (outNameByteArray.data(), SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate) ;
     sf_count_t totalWrittenFrames = 0;
-
-    if (sourceFiles.count() == 0 || sourceFiles.count() > 64)
-        return;
 
     for (int i = 0; i < sourceFiles.count(); i++)
     {
@@ -123,6 +133,7 @@ void AudioFactory::createOutput_NormalMode()
         memset(buffer, 0, sizeof(buffer));
 
         sf_count_t readFrames = 0;
+        sf_count_t previousReadFramesTotal = 0;
         sf_count_t sliceStartPoint = totalWrittenFrames;
         if (sourceFiles[i] == SILENT_SLICE_NAME) // add 1 sec silence
         {
@@ -147,11 +158,26 @@ void AudioFactory::createOutput_NormalMode()
                         buffer[i] = buffer[i]*normalizationFactor;
                 }
 
+                for (int i = previousReadFramesTotal; i < fadeInCurveLength * inFile.channels(); i++)
+                {
+                    if ((i - previousReadFramesTotal) < BUFFER_LENGTH)
+                        buffer[i - previousReadFramesTotal] = buffer[i- previousReadFramesTotal]*fadeInCurve[i/inFile.channels()];
+                }
+
+                for (int i = (inFile.frames() - fadeOutCurveLength) * inFile.channels(); i < previousReadFramesTotal + readFrames; i++)
+                {
+                    if (i - previousReadFramesTotal < BUFFER_LENGTH)
+                    {
+                        int curveIndex = inFile.frames() - i/inFile.channels() - 1;
+                        buffer[i - previousReadFramesTotal] = buffer[i - previousReadFramesTotal]*fadeOutCurve[curveIndex];
+                    }
+                }
+
                 if (convertToMono)
                 {
                     for (int j = 0; j < readFrames; j+=2)
                     {
-                        int monoFrame = (buffer[j]+buffer[j+1])*0.5;
+                        int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
                         totalWrittenFrames += outFile.write(&monoFrame, 1);
                     }
                 }
@@ -165,6 +191,8 @@ void AudioFactory::createOutput_NormalMode()
                 }
                 else
                     totalWrittenFrames += outFile.write(buffer, readFrames);
+
+                previousReadFramesTotal += readFrames;
             }
         }
         otWriter->addSlice((uint32_t)(sliceStartPoint/sfinfo.channels), (uint32_t)(totalWrittenFrames/sfinfo.channels));
@@ -222,6 +250,12 @@ void AudioFactory::createOutput_GridMode()
     }
     sliceSize *= sfinfo.channels;
 
+    int fadeInCurveLength = sfinfo.samplerate*fadeIn_ms/1000;
+    int fadeOutCurveLength = sfinfo.samplerate*fadeOut_ms/1000;
+    float fadeInCurve[fadeInCurveLength];
+    float fadeOutCurve[fadeOutCurveLength];
+    createFadeCurves(fadeInCurveLength, fadeOutCurveLength, fadeInCurve, fadeOutCurve);
+
     QByteArray outNameByteArray = outFileName.toLocal8Bit();
     SndfileHandle outFile = SndfileHandle (outNameByteArray.data(), SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate);
 
@@ -250,6 +284,8 @@ void AudioFactory::createOutput_GridMode()
 
             memset(buffer, 0, sizeof(buffer));
             sf_count_t readFrames = 0;
+            sf_count_t previousReadFramesTotal = 0;
+
             while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
             {
                 if (this->normalizationMode == NormalizationMode_t::Slice)
@@ -258,11 +294,27 @@ void AudioFactory::createOutput_GridMode()
                         buffer[i] = buffer[i]*normalizationFactor;
                 }
 
+                for (int i = previousReadFramesTotal; i < fadeInCurveLength * inFile.channels(); i++)
+                {
+                    if ((i - previousReadFramesTotal) < BUFFER_LENGTH)
+                        buffer[i - previousReadFramesTotal] = buffer[i- previousReadFramesTotal]*fadeInCurve[i/inFile.channels()];
+                }
+
+                for (int i = (inFile.frames() - fadeOutCurveLength) * inFile.channels(); i < previousReadFramesTotal + readFrames; i++)
+                {
+                    if (i - previousReadFramesTotal < BUFFER_LENGTH)
+                    {
+                        int curveIndex = inFile.frames() - i/inFile.channels() - 1;
+                        buffer[i - previousReadFramesTotal] = buffer[i - previousReadFramesTotal]*fadeOutCurve[curveIndex];
+                    }
+                }
+
+
                 if (convertToMono)
                 {
                     for (int j = 0; j < readFrames; j+=2)
                     {
-                        int monoFrame = (buffer[j]+buffer[j+1])*0.5;
+                        int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
                         writtenSliceSize += outFile.write(&monoFrame, 1);
                     }
                 }
@@ -276,6 +328,8 @@ void AudioFactory::createOutput_GridMode()
                 }
                 else
                     writtenSliceSize += outFile.write(buffer, readFrames);
+
+                previousReadFramesTotal += readFrames;
             }
         }
 
@@ -419,4 +473,18 @@ void AudioFactory::normalizeChain()
         outFile.write(buffer, readFrames);
     }
     tempFile.remove();
+}
+
+void AudioFactory::createFadeCurves(const int fadeInCurveLength, const int fadeOutCurveLength, float fadeInCurve[], float fadeOutCurve[])
+{
+    if (fadeInCurveLength > 0)
+    {
+        for (int i = 0; i < fadeInCurveLength; i++)
+            fadeInCurve[i] = (i*1.0)/fadeInCurveLength;
+    }
+
+    if (fadeOutCurveLength > 0)
+        for (int i = 0; i < fadeOutCurveLength; i++) {
+            fadeOutCurve[i] = (i*1.0)/fadeOutCurveLength;
+    }
 }

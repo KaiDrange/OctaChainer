@@ -25,6 +25,10 @@ void ProjectSettings::loadProjectSettings(const QString projectFileName)
         this->modeName = line.split(':')[1];
         line = findSavedProjectLine(stream, "NormalizationMode:");
         this->normalizationMode = line.split(':')[1].toInt();
+        line = findSavedProjectLine(stream, "FadeIn:");
+        this->fadein = line.split(':')[1].toInt();
+        line = findSavedProjectLine(stream, "FadeOut:");
+        this->fadeout = line.split(':')[1].toInt();
         line = findSavedProjectLine(stream, "IncludeTail:");
         this->includeTail = line.split(':')[1] == "1";
     }
@@ -87,6 +91,8 @@ void ProjectSettings::saveProjectSettings(const QString projectFileName)
     stream << "Gain:" << this->gain << "\n";
     stream << "Tempo:" << this->tempo << "\n";
     stream << "NormalizationMode:" << this->normalizationMode << "\n";
+    stream << "FadeIn:" << this->fadein << "\n";
+    stream << "FadeOut:" << this->fadeout << "\n";
     stream << "SliceSteps:" << this->sliceSteps << "\n";
     stream << "CreateOTFile:" << this->createOTFile << "\n";
     stream << "IncludeTail:" << this->includeTail << "\n";

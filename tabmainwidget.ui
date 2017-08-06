@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>424</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>450</x>
-     <y>360</y>
+     <y>395</y>
      <width>231</width>
      <height>31</height>
     </rect>
@@ -445,7 +445,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>390</y>
+     <y>425</y>
      <width>251</width>
      <height>23</height>
     </rect>
@@ -474,7 +474,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -493,7 +493,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>390</y>
+     <y>425</y>
      <width>51</width>
      <height>21</height>
     </rect>
@@ -506,7 +506,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -525,7 +525,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -544,7 +544,7 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -563,7 +563,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>395</y>
+     <y>430</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -581,7 +581,7 @@
      <x>10</x>
      <y>10</y>
      <width>421</width>
-     <height>371</height>
+     <height>401</height>
     </rect>
    </property>
    <property name="acceptDrops">
@@ -602,6 +602,26 @@ selection-background-color: rgb(170, 170, 127);</string>
    </property>
    <property name="textElideMode">
     <enum>Qt::ElideRight</enum>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="dropFadeIn">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>360</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="dropFadeOut">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>360</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>

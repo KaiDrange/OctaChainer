@@ -33,6 +33,8 @@ public:
     int sliceSteps = 0;
     bool createOTFile = false;
     bool includeTail = true;
+    int fadein = 0;
+    int fadeout = 0;
     QVector<QString> samplePaths;
 
 private:

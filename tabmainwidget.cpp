@@ -38,6 +38,20 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
     ui->dropNormalize->addItem("Normalize slices", NormalizationMode_t::Slice);
     ui->dropNormalize->addItem("Normalize chain", NormalizationMode_t::Chain);
 
+    ui->dropFadeIn->addItem("No fade-in", 0);
+    ui->dropFadeIn->addItem("1ms fade-in", 1);
+    ui->dropFadeIn->addItem("2ms fade-in", 2);
+    ui->dropFadeIn->addItem("3ms fade-in", 3);
+    ui->dropFadeIn->addItem("5ms fade-in", 5);
+    ui->dropFadeIn->addItem("10ms fade-in", 10);
+
+    ui->dropFadeOut->addItem("No fade-out", 0);
+    ui->dropFadeOut->addItem("1ms fade-out", 1);
+    ui->dropFadeOut->addItem("2ms fade-out", 2);
+    ui->dropFadeOut->addItem("3ms fade-out", 3);
+    ui->dropFadeOut->addItem("5ms fade-out", 5);
+    ui->dropFadeOut->addItem("10ms fade-out", 10);
+
     ui->btnCreate->setEnabled(false);
 
     QShortcut *playHotkey = new QShortcut(QKeySequence(" "), this);
@@ -86,6 +100,8 @@ void TabMainWidget::createWav(QString filename)
     int steps = 0;
     SliceMode_t sliceMode = SliceMode_t::NormalMode;
     NormalizationMode_t normalizationMode = static_cast<NormalizationMode_t>(ui->dropNormalize->currentData().toInt());
+    int fadeIn = ui->dropFadeIn->currentData().toInt();
+    int fadeOut = ui->dropFadeOut->currentData().toInt();
 
     QVector<QString> sourceFiles;
     for (int i = 0; i < ui->listSlices->count(); i++)
@@ -96,7 +112,7 @@ void TabMainWidget::createWav(QString filename)
 
     QThread *workThread = new QThread;
     AudioFactory *af = new AudioFactory;
-    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode, true);
+    af->setUISelections(sampleRate, bitRate, channels, sourceFiles, filename, loopSetting, stretchSetting, trigQuantSetting, gain, tempo, steps, sliceMode, normalizationMode, fadeIn, fadeOut, true);
     af->moveToThread(workThread);
     connect(workThread, SIGNAL(started()), af, SLOT(generateFiles()));
     connect(af, SIGNAL(doneGenerating()), workThread, SLOT(quit()));
@@ -270,6 +286,8 @@ void TabMainWidget::reset()
     ui->sliderBPM->setValue(500);
     ui->btnCreate->setEnabled(false);
     ui->dropNormalize->setCurrentIndex(0);
+    ui->dropFadeIn->setCurrentIndex(0);
+    ui->dropFadeOut->setCurrentIndex(0);
     on_sliderGain_valueChanged(0);
     on_sliderBPM_valueChanged(500);
 }
@@ -299,6 +317,9 @@ void TabMainWidget::configure(ProjectSettings &settings)
     if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
         ui->btnCreate->setEnabled(true);
 
+    ui->dropFadeIn->setCurrentIndex(settings.fadein);
+    ui->dropFadeOut->setCurrentIndex(settings.fadeout);
+
     updateSliceCount();
 }
 
@@ -321,6 +342,8 @@ void TabMainWidget::updateCurrentSettings(ProjectSettings &settings)
     settings.gain = ui->sliderGain->value();
     settings.tempo = ui->sliderBPM->value();
     settings.normalizationMode = ui->dropNormalize->currentIndex();
+    settings.fadein = ui->dropFadeIn->currentIndex();
+    settings.fadeout = ui->dropFadeOut->currentIndex();
     for (int i = 0; i < ui->listSlices->count(); i++)
         settings.samplePaths.append(ui->listSlices->item(i)->text());
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>424</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>395</y>
+     <y>430</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -49,7 +49,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -68,7 +68,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -87,7 +87,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -189,7 +189,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>390</y>
+     <y>419</y>
      <width>251</width>
      <height>23</height>
     </rect>
@@ -208,7 +208,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>390</y>
+     <y>425</y>
      <width>51</width>
      <height>21</height>
     </rect>
@@ -480,7 +480,7 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>390</y>
+     <y>425</y>
      <width>81</width>
      <height>23</height>
     </rect>
@@ -499,7 +499,7 @@
    <property name="geometry">
     <rect>
      <x>450</x>
-     <y>371</y>
+     <y>400</y>
      <width>231</width>
      <height>20</height>
     </rect>
@@ -581,7 +581,7 @@
      <x>10</x>
      <y>10</y>
      <width>421</width>
-     <height>371</height>
+     <height>401</height>
     </rect>
    </property>
    <property name="acceptDrops">
@@ -617,6 +617,26 @@ selection-background-color: rgb(170, 170, 127);</string>
     <string>Create .ot file</string>
    </property>
   </widget>
+  <widget class="QComboBox" name="dropFadeOut">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>380</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="dropFadeIn">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>380</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>btnAddSilence</zorder>
   <zorder>btnRemove</zorder>
   <zorder>btnAddWav</zorder>
@@ -633,6 +653,8 @@ selection-background-color: rgb(170, 170, 127);</string>
   <zorder>listSlices</zorder>
   <zorder>lblSliceCOunt</zorder>
   <zorder>chkCreateOTFile</zorder>
+  <zorder>dropFadeOut</zorder>
+  <zorder>dropFadeIn</zorder>
  </widget>
  <resources/>
  <connections/>
