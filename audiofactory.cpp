@@ -301,6 +301,9 @@ void AudioFactory::createOutput_GridMode()
 
 void AudioFactory::createOutput_StepsMode()
 {
+    if (sourceFiles.count() == 0)
+        return;
+
     SF_INFO sfinfo;
     sfinfo.channels = channels;
     sfinfo.samplerate = sampleRate;
@@ -309,33 +312,32 @@ void AudioFactory::createOutput_StepsMode()
     else
         sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
 
-    if (sourceFiles.count() == 0)
-        return;
-
     emit fileProgress(0, sourceFiles.count());
-
-    QByteArray ba = sourceFiles[0].toLocal8Bit();
-    SndfileHandle audioFile = SndfileHandle(ba.data());
 
     QString otName = sourceFiles[0];
     otName.chop(4);
     otName += ".ot";
 
-    sf_count_t sliceSize = sampleRate*60*steps/tempo;
-    sliceSize *= sfinfo.channels;
+    int totalSlices = 0;
+    bool addTailSlice = false;
+    getStepsModeSliceCount(steps, tempo, includeTail, sourceFiles[0], totalSlices, addTailSlice);
+    double sliceSize = sampleRate*60.0*steps/tempo;
+
+    QByteArray ba = sourceFiles[0].toLocal8Bit();
+    SndfileHandle audioFile = SndfileHandle(ba.data());
 
     otWriter = new OTWriter(otName, sampleRate, loopSetting, stretchSetting, trigQuantSetting, gain, tempo);
+
     int sliceCount = 0;
-    bool addTailSlice = audioFile.frames() % sliceSize && includeTail;
-    while ((sliceCount+addTailSlice) * sliceSize <= audioFile.frames() && sliceCount < 64)
+    while (sliceCount < totalSlices && sliceCount < 64)
     {
-        otWriter->addSlice((uint32_t)(sliceCount*sliceSize)/sfinfo.channels, (uint32_t)((sliceCount+1)*sliceSize)/sfinfo.channels);
+        otWriter->addSlice((uint32_t)(sliceCount*sliceSize), (uint32_t)((sliceCount+1)*sliceSize));
         sliceCount++;
     }
-    if (sliceCount < 64 && sliceCount*sliceSize < audioFile.frames())
-        otWriter->addSlice((uint32_t)(sliceCount*sliceSize)/sfinfo.channels, (uint32_t)audioFile.frames()/sfinfo.channels);
-    otWriter->write((uint32_t)(audioFile.frames()/sfinfo.channels));
+    if (addTailSlice && sliceCount < 64)
+        otWriter->addSlice((uint32_t)(sliceCount*sliceSize), (uint32_t)audioFile.frames()/sfinfo.channels);
 
+    otWriter->write((uint32_t)(audioFile.frames()));
     delete otWriter;
 }
 
@@ -369,9 +371,9 @@ void AudioFactory::getStepsModeSliceCount(const int stepsPerSlice, const int tem
     QByteArray ba = file.toLocal8Bit();
     SndfileHandle audioFile = SndfileHandle(ba.data());
 
-    sf_count_t sliceSize = audioFile.samplerate()*60*stepsPerSlice/tempo;
-    hasTail = audioFile.frames() % sliceSize && includeTail;
+    double sliceSize = audioFile.samplerate()*60.0*stepsPerSlice/tempo;
     sliceCount = audioFile.frames()/sliceSize;
+    hasTail = (audioFile.frames() - sliceSize * sliceCount) > 1 && includeTail;
 }
 
 
