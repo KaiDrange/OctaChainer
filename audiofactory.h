@@ -12,7 +12,7 @@
 #define	BUFFER_LENGTH	4096
 #define SILENT_SLICE_NAME "--- silent slice (1 second in length outside grid mode) ---"
 
-enum SliceMode_t { NormalMode = 0, GridMode = 1, StepsMode = 2 };
+enum SliceMode_t { NormalMode = 0, GridMode = 1, StepsMode = 2, MegabreakMode = 3 };
 enum NormalizationMode_t { None = 0, Slice = 1, Chain = 2 };
 
 class AudioFactory : public QObject
@@ -39,7 +39,8 @@ public:
                          const NormalizationMode_t normalizationMode,
                          const int fadeIn,
                          const int fadeOut,
-                         const bool createOTFile);
+                         const bool createOTFile,
+                         const int megabreakFiles);
 
     void setStepsModeUISelections(const QString &sourcefile,
                         const Loop_t loopSetting,
@@ -57,8 +58,9 @@ private:
     void createOutput_NormalMode();
     void createOutput_GridMode();
     void createOutput_StepsMode();
+    void createOutput_MegabreakMode();
     double findNormalizationFactor(SndfileHandle *file);
-    void normalizeChain();
+    void normalizeChain(const QString filename);
     void createFadeCurves(const int fadeInCurveLength, const int fadeOutCurveLength, float fadeInCurve[], float fadeOutCurve[]);
     int buffer[BUFFER_LENGTH];
     OTWriter *otWriter;
@@ -82,6 +84,7 @@ private:
     bool includeTail;
     int fadeIn_ms;
     int fadeOut_ms;
+    int megabreakFiles;
 };
 
 #endif // AUDIOFACTORY_H

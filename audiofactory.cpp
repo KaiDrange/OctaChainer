@@ -6,11 +6,24 @@ void AudioFactory::generateFiles()
         createOutput_NormalMode();
     else if (this->sliceMode == SliceMode_t::GridMode)
         createOutput_GridMode();
-    else
+    else if (this->sliceMode == SliceMode_t::StepsMode)
         createOutput_StepsMode();
+    else
+        createOutput_MegabreakMode();
 
-    if (this->normalizationMode == NormalizationMode_t::Chain)
-        normalizeChain();
+    if (this->normalizationMode == NormalizationMode_t::Chain) {
+        if (this->sliceMode == SliceMode_t::MegabreakMode) {
+            for (int i = 0; i < this->megabreakFiles; i++) {
+                QString otName = outFileName;
+                otName.chop(4);
+                otName += i < 10 ? "0" + QVariant(i).toString() : QVariant(i).toString();
+                otName += ".wav";
+                normalizeChain(otName);
+            }
+        }
+        else
+            normalizeChain(this->outFileName);
+    }
 
     emit doneGenerating();
 }
@@ -30,7 +43,8 @@ void AudioFactory::setUISelections(const int sampleRate,
                      const NormalizationMode_t normalizationMode,
                      const int fadeIn,
                      const int fadeOut,
-                     const bool createOTFile)
+                     const bool createOTFile,
+                     const int megabreakFiles)
 {
     this->sampleRate = sampleRate;
     this->bitRate = bitRate;
@@ -48,6 +62,7 @@ void AudioFactory::setUISelections(const int sampleRate,
     this->fadeIn_ms = fadeIn;
     this->fadeOut_ms = fadeOut;
     this->createOTFile = createOTFile;
+    this->megabreakFiles = megabreakFiles;
 }
 
 void AudioFactory::setStepsModeUISelections(const QString &sourcefile,
@@ -395,6 +410,121 @@ void AudioFactory::createOutput_StepsMode()
     delete otWriter;
 }
 
+void AudioFactory::createOutput_MegabreakMode() {
+    if (sourceFiles.count() == 0 || sourceFiles.count() > 64)
+        return;
+
+    SF_INFO sfinfo;
+    sfinfo.channels = channels;
+    sfinfo.samplerate = sampleRate;
+    if (bitRate == 16)
+        sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+    else
+        sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
+
+    OTWriter* otWriters[this->megabreakFiles];
+    SndfileHandle outFiles[64];
+    for (int i = 0; i < this->megabreakFiles; i++) {
+        QString otName = outFileName;
+        otName.chop(4);
+        otName += i < 10 ? "0" + QVariant(i).toString() : QVariant(i).toString();
+        otWriters[i] = new OTWriter(otName + ".ot", sampleRate, loopSetting, stretchSetting, trigQuantSetting, gain, tempo);
+        otName += ".wav";
+        QByteArray outNameByteArray = otName.toLocal8Bit();
+        outFiles[i] = SndfileHandle (outNameByteArray.data(), SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate) ;
+    }
+
+    int fadeInCurveLength = sfinfo.samplerate*fadeIn_ms/1000;
+    int fadeOutCurveLength = sfinfo.samplerate*fadeOut_ms/1000;
+    float fadeInCurve[fadeInCurveLength];
+    float fadeOutCurve[fadeOutCurveLength];
+    createFadeCurves(fadeInCurveLength, fadeOutCurveLength, fadeInCurve, fadeOutCurve);
+
+
+    sf_count_t totalWrittenFrames = 0;
+    for (int i = 0; i < sourceFiles.count(); i++)
+    {
+        emit fileProgress(i, sourceFiles.count());
+        bool convertToMono = false;
+        bool convertToStereo = false;
+
+        QString inName = sourceFiles[i];
+
+        QByteArray ba = inName.toLocal8Bit();
+        SndfileHandle inFile = SndfileHandle(ba.data());
+        if (inFile.channels() > outFiles[i].channels())
+            convertToMono = true;
+        else if (inFile.channels() < outFiles[i].channels())
+            convertToStereo = true;
+
+        double normalizationFactor = findNormalizationFactor(&inFile);
+        memset(buffer, 0, sizeof(buffer));
+
+        sf_count_t readFrames = 0;
+        sf_count_t previousReadFramesTotal = 0;
+        sf_count_t sliceStartPoint = totalWrittenFrames;
+        int currentOutIndex = 0;
+        sf_count_t sliceLength = inFile.frames()/this->megabreakFiles;
+
+        while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
+        {
+            if (this->normalizationMode == NormalizationMode_t::Slice)
+            {
+                for (int j = 0; j < BUFFER_LENGTH; j++)
+                    buffer[j] = buffer[j]*normalizationFactor;
+            }
+
+//                for (int j = previousReadFramesTotal; j < fadeInCurveLength * inFile.channels(); j++)
+//                {
+//                    if ((j - previousReadFramesTotal) < BUFFER_LENGTH)
+//                        buffer[j - previousReadFramesTotal] = buffer[j- previousReadFramesTotal]*fadeInCurve[j/inFile.channels()];
+//                }
+
+//                for (int j = (inFile.frames() - fadeOutCurveLength) * inFile.channels(); j < previousReadFramesTotal + readFrames; j++)
+//                {
+//                    if (j - previousReadFramesTotal < BUFFER_LENGTH)
+//                    {
+//                        int curveIndex = inFile.frames() - j/inFile.channels() - 1;
+//                        buffer[j - previousReadFramesTotal] = buffer[j - previousReadFramesTotal]*fadeOutCurve[curveIndex];
+//                    }
+//                }
+
+//            if (convertToMono)
+//            {
+//                for (int j = 0; j < readFrames; j+=2)
+//                {
+//                    int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
+//                    totalWrittenFrames += outFile.write(&monoFrame, 1);
+//                }
+//            }
+//            else if (convertToStereo)
+//            {
+//                for (int j = 0; j < readFrames; j++)
+//                {
+//                    int stereoFrames[2] = { buffer[j], buffer[j] };
+//                    totalWrittenFrames += outFile.write(stereoFrames, 2);
+//                }
+//            }
+//            else {
+                if (previousReadFramesTotal + readFrames > sliceLength*(currentOutIndex+1)) {
+                    sf_count_t framesForNextSlice = previousReadFramesTotal + readFrames - sliceLength*(currentOutIndex+1);
+                    totalWrittenFrames += outFiles[currentOutIndex].write(buffer, readFrames - framesForNextSlice);
+                    currentOutIndex++;
+                    totalWrittenFrames += outFiles[currentOutIndex].write(&buffer[readFrames - framesForNextSlice], framesForNextSlice);
+                }
+                else
+                    totalWrittenFrames += outFiles[currentOutIndex].write(buffer, readFrames);
+//            }
+            previousReadFramesTotal += readFrames;
+        }
+//        otWriter->addSlice((uint32_t)(sliceStartPoint/sfinfo.channels), (uint32_t)(totalWrittenFrames/sfinfo.channels));
+    }
+//    otWriter->write((uint32_t)(totalWrittenFrames/sfinfo.channels));
+
+    for (int i = 0; i < this->megabreakFiles; i++) {
+        delete otWriters[i];
+    }
+}
 
 QString AudioFactory::getFormatString(const QString &file)
 {
@@ -452,16 +582,16 @@ double AudioFactory::findNormalizationFactor(SndfileHandle *file)
     return factor;
 }
 
-void AudioFactory::normalizeChain()
+void AudioFactory::normalizeChain(const QString filename)
 {
-    QFile tempFile(this->outFileName);
-    QString tempFileName = this->outFileName + "_temp";
+    QFile tempFile(filename);
+    QString tempFileName = filename + "_temp";
     tempFile.rename(tempFileName);
 
     QByteArray inNameByteArray = tempFileName.toLocal8Bit();
     SndfileHandle inFile = SndfileHandle(inNameByteArray.data(), SFM_READ);
 
-    QByteArray outNameByteArray = this->outFileName.toLocal8Bit();
+    QByteArray outNameByteArray = filename.toLocal8Bit();
     SndfileHandle outFile = SndfileHandle(outNameByteArray.data(), SFM_WRITE, inFile.format(), inFile.channels(), inFile.samplerate());
     sf_count_t readFrames = 0;
     double factor = this->findNormalizationFactor(&inFile);

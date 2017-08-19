@@ -35,6 +35,7 @@ public:
     bool includeTail = true;
     int fadein = 0;
     int fadeout = 0;
+    int megabreakFiles: 16;
     QVector<QString> samplePaths;
 
 private:

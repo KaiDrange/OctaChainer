@@ -31,6 +31,8 @@ void ProjectSettings::loadProjectSettings(const QString projectFileName)
         this->fadeout = line.split(':')[1].toInt();
         line = findSavedProjectLine(stream, "IncludeTail:");
         this->includeTail = line.split(':')[1] == "1";
+        line = findSavedProjectLine(stream, "MegabreakFiles:");
+        this->megabreakFiles = line.split(':')[1].toInt();
     }
 
     line = findSavedProjectLine(stream, "Slicecount:");
@@ -93,6 +95,7 @@ void ProjectSettings::saveProjectSettings(const QString projectFileName)
     stream << "NormalizationMode:" << this->normalizationMode << "\n";
     stream << "FadeIn:" << this->fadein << "\n";
     stream << "FadeOut:" << this->fadeout << "\n";
+    stream << "MegabreakFiles:" << this->megabreakFiles << "\n";
     stream << "SliceSteps:" << this->sliceSteps << "\n";
     stream << "CreateOTFile:" << this->createOTFile << "\n";
     stream << "IncludeTail:" << this->includeTail << "\n";

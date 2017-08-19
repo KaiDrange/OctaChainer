@@ -75,7 +75,7 @@ void MainWindow::on_openProject_triggered()
         }
         else if (ps.modeName == ps.ModeName_Megabreak)
         {
-            gridTab->configure(ps);
+            megabreakTab->configure(ps);
             ui->tabWidget->setCurrentIndex(3);
         }
     }
@@ -91,6 +91,7 @@ void MainWindow::clearProject()
     mainTab->reset();
     gridTab->reset();
     stepsTab->reset();
+    megabreakTab->reset();
 }
 
 void MainWindow::on_menuAudioPath_triggered()
@@ -125,7 +126,7 @@ void MainWindow::readOptions()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "OctaChainer v1.3", "Freeware tool for the Elektron Octatrack and Rytm. Created by Elektronauts user Abhoth.");
+    QMessageBox::about(this, "OctaChainer v1.3", "Freeware tool for the Elektron Octatrack and Rytm. Created by Kai Drange.");
 }
 
 void MainWindow::on_actionSet_projects_default_path_triggered()
