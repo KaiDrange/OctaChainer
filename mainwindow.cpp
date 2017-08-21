@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     stepsTab = new TabStepsWidget(this);
     ui->tabWidget->addTab(stepsTab, tr("Slice per x step of BPM"));
     megabreakTab = new TabMegabreakWidget(this);
-    ui->tabWidget->addTab(megabreakTab, tr("Megabreak of Doom"));
+    ui->tabWidget->addTab(megabreakTab, tr("Megabreak"));
 
     setAcceptDrops(true);
     readOptions();
@@ -126,7 +126,7 @@ void MainWindow::readOptions()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "OctaChainer v1.3", "Freeware tool for the Elektron Octatrack and Rytm. Created by Kai Drange.");
+    QMessageBox::about(this, "OctaChainer v1.3", "Freeware tool for the Elektron Octatrack and Rytm. Created by Kai Drange of Tic Tic.\n\nVisit www.ticticelectro.com for usage instructions, bug reports or feature requests.\n\nWhile there, feel free to check out our music as well. Facebook or Soundcloud followers, shares etc. are all much appreciated.");
 }
 
 void MainWindow::on_actionSet_projects_default_path_triggered()

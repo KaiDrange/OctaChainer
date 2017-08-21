@@ -16,7 +16,7 @@ void AudioFactory::generateFiles()
             for (int i = 0; i < this->megabreakFiles; i++) {
                 QString otName = outFileName;
                 otName.chop(4);
-                otName += i < 10 ? "0" + QVariant(i).toString() : QVariant(i).toString();
+                otName += i < 9 ? "0" + QVariant(i+1).toString() : QVariant(i+1).toString();
                 otName += ".wav";
                 normalizeChain(otName);
             }
@@ -427,7 +427,7 @@ void AudioFactory::createOutput_MegabreakMode() {
     for (int i = 0; i < this->megabreakFiles; i++) {
         QString otName = outFileName;
         otName.chop(4);
-        otName += i < 10 ? "0" + QVariant(i).toString() : QVariant(i).toString();
+        otName += i < 9 ? "0" + QVariant(i+1).toString() : QVariant(i+1).toString();
         otWriters[i] = new OTWriter(otName + ".ot", sampleRate, loopSetting, stretchSetting, trigQuantSetting, gain, tempo);
         otName += ".wav";
         QByteArray outNameByteArray = otName.toLocal8Bit();
@@ -441,7 +441,7 @@ void AudioFactory::createOutput_MegabreakMode() {
     createFadeCurves(fadeInCurveLength, fadeOutCurveLength, fadeInCurve, fadeOutCurve);
 
 
-    sf_count_t totalWrittenFrames = 0;
+    sf_count_t totalWrittenFrames[64] = {0};
     for (int i = 0; i < sourceFiles.count(); i++)
     {
         emit fileProgress(i, sourceFiles.count());
@@ -462,7 +462,7 @@ void AudioFactory::createOutput_MegabreakMode() {
 
         sf_count_t readFrames = 0;
         sf_count_t previousReadFramesTotal = 0;
-        sf_count_t sliceStartPoint = totalWrittenFrames;
+        sf_count_t sliceStartPoint = totalWrittenFrames[0];
         int currentOutIndex = 0;
         sf_count_t sliceLength = inFile.frames()/this->megabreakFiles;
 
@@ -474,52 +474,70 @@ void AudioFactory::createOutput_MegabreakMode() {
                     buffer[j] = buffer[j]*normalizationFactor;
             }
 
-//                for (int j = previousReadFramesTotal; j < fadeInCurveLength * inFile.channels(); j++)
-//                {
-//                    if ((j - previousReadFramesTotal) < BUFFER_LENGTH)
-//                        buffer[j - previousReadFramesTotal] = buffer[j- previousReadFramesTotal]*fadeInCurve[j/inFile.channels()];
-//                }
+            // check if at least part of a fade-in is somewhere in this buffer.
+            for (int k = 0; k < this->megabreakFiles; k++) {
+                if (previousReadFramesTotal - fadeInCurveLength*inFile.channels() < sliceLength*inFile.channels()*k && previousReadFramesTotal + readFrames > sliceLength*inFile.channels()*k) {
+                    // if so, add fade-in to buffer data
+                    int sliceStartBufferPos = previousReadFramesTotal - sliceLength*inFile.channels()*k;
+                    for (int j = 0; j < readFrames; j++) {
+                        if (sliceStartBufferPos + j >= 0 && sliceStartBufferPos + j < fadeInCurveLength*inFile.channels())
+                            buffer[j] = buffer[j]*fadeInCurve[(sliceStartBufferPos + j)/inFile.channels()];
+                    }
+                }
+            }
 
-//                for (int j = (inFile.frames() - fadeOutCurveLength) * inFile.channels(); j < previousReadFramesTotal + readFrames; j++)
-//                {
-//                    if (j - previousReadFramesTotal < BUFFER_LENGTH)
-//                    {
-//                        int curveIndex = inFile.frames() - j/inFile.channels() - 1;
-//                        buffer[j - previousReadFramesTotal] = buffer[j - previousReadFramesTotal]*fadeOutCurve[curveIndex];
-//                    }
-//                }
+            // check if at least part of a fade-out is somewhere in this buffer.
+            for (int k = 1; k < this->megabreakFiles + 1; k++) {
+                int sliceEndBufferPos = sliceLength*inFile.channels()*k - previousReadFramesTotal;
+                if (sliceEndBufferPos >= 0 && sliceEndBufferPos <= readFrames) {
+                    // if so, add fade-out to buffer data
+                    for (int j = 0; j < readFrames; j++) {
+                        if (sliceEndBufferPos - j > 0 && sliceEndBufferPos - j < fadeOutCurveLength * inFile.channels())
+                            buffer[j] = buffer[j]*fadeOutCurve[(sliceEndBufferPos - j)/inFile.channels()];
+                    }
+                }
+            }
 
-//            if (convertToMono)
-//            {
-//                for (int j = 0; j < readFrames; j+=2)
-//                {
-//                    int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
-//                    totalWrittenFrames += outFile.write(&monoFrame, 1);
-//                }
-//            }
-//            else if (convertToStereo)
-//            {
-//                for (int j = 0; j < readFrames; j++)
-//                {
-//                    int stereoFrames[2] = { buffer[j], buffer[j] };
-//                    totalWrittenFrames += outFile.write(stereoFrames, 2);
-//                }
-//            }
-//            else {
-                if (previousReadFramesTotal + readFrames > sliceLength*(currentOutIndex+1)) {
-                    sf_count_t framesForNextSlice = previousReadFramesTotal + readFrames - sliceLength*(currentOutIndex+1);
-                    totalWrittenFrames += outFiles[currentOutIndex].write(buffer, readFrames - framesForNextSlice);
+            if (convertToMono)
+            {
+                for (int j = 0; j < readFrames; j+=2)
+                {
+                    int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
+                    if ((previousReadFramesTotal + j)/2 > sliceLength*(currentOutIndex+1))
+                        currentOutIndex++;
+                    if (currentOutIndex < this->megabreakFiles)
+                        totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(&monoFrame, 1);
+                }
+            }
+            else if (convertToStereo)
+            {
+                for (int j = 0; j < readFrames; j++)
+                {
+                    int stereoFrames[2] = { buffer[j], buffer[j] };
+                    if (previousReadFramesTotal + j > sliceLength*(currentOutIndex+1))
+                        currentOutIndex++;
+                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(stereoFrames, 2);
+                }
+            }
+            else {
+                if (previousReadFramesTotal + readFrames > sliceLength*(currentOutIndex+1)*sfinfo.channels) {
+                    sf_count_t framesForNextSlice = previousReadFramesTotal + readFrames - sliceLength*(currentOutIndex+1)*sfinfo.channels;
+                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(buffer, readFrames - framesForNextSlice);
                     currentOutIndex++;
-                    totalWrittenFrames += outFiles[currentOutIndex].write(&buffer[readFrames - framesForNextSlice], framesForNextSlice);
+                    if (currentOutIndex < this->megabreakFiles)
+                        totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(&buffer[readFrames - framesForNextSlice], framesForNextSlice);
                 }
                 else
-                    totalWrittenFrames += outFiles[currentOutIndex].write(buffer, readFrames);
-//            }
+                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(buffer, readFrames);
+            }
             previousReadFramesTotal += readFrames;
         }
-//        otWriter->addSlice((uint32_t)(sliceStartPoint/sfinfo.channels), (uint32_t)(totalWrittenFrames/sfinfo.channels));
+        for (int j = 0; j < this->megabreakFiles; j++) {
+            otWriters[j]->addSlice((uint32_t)(sliceStartPoint/sfinfo.channels), (uint32_t)(totalWrittenFrames[j]/sfinfo.channels));
+        }
     }
-//    otWriter->write((uint32_t)(totalWrittenFrames/sfinfo.channels));
+    for (int i = 0; i < this->megabreakFiles; i++)
+        otWriters[i]->write((uint32_t)(totalWrittenFrames[i]/sfinfo.channels));
 
     for (int i = 0; i < this->megabreakFiles; i++) {
         delete otWriters[i];

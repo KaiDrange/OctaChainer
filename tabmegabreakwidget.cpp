@@ -53,10 +53,15 @@ TabMegabreakWidget::TabMegabreakWidget(QWidget *parent) :
     ui->dropFadeOut->addItem("10ms fade-out", 10);
 
     ui->dropFilecount->addItem("Split output into 2 files", 2);
+    ui->dropFilecount->addItem("Split output into 3 files", 3);
     ui->dropFilecount->addItem("Split output into 4 files", 4);
+    ui->dropFilecount->addItem("Split output into 6 files", 6);
     ui->dropFilecount->addItem("Split output into 8 files", 8);
+    ui->dropFilecount->addItem("Split output into 12 files", 12);
     ui->dropFilecount->addItem("Split output into 16 files", 16);
+    ui->dropFilecount->addItem("Split output into 24 files", 24);
     ui->dropFilecount->addItem("Split output into 32 files", 32);
+    ui->dropFilecount->addItem("Split output into 48 files", 48);
     ui->dropFilecount->addItem("Split output into 64 files", 64);
 
     ui->btnCreate->setEnabled(false);
