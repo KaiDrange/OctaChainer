@@ -49,7 +49,7 @@ macx{
     INCLUDEPATH += $$PWD/libsndfile/include
     DEPENDPATH += $$PWD/libsndfile/include
 }else{
-    *-g++{
+    *-g++*{
         LIBS+=-lsndfile
     }
 }
