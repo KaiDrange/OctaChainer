@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=OctaChainer
+Comment=Tool for the Elektron Octatrack sampler
+Comment[fr]=Outil pour l'échantillonneur Elektron Octatrack
+TryExec=OctaChainer
+Exec=OctaChainer
+Icon=octachainer-logo
+Type=Application
+Categories=AudioVideo;Audio;Music
