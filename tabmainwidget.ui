@@ -186,13 +186,13 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>120</y>
+     <y>110</y>
      <width>261</width>
-     <height>171</height>
+     <height>181</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="title">
     <string>OT Attributes</string>
@@ -201,9 +201,9 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>110</y>
+      <y>120</y>
       <width>151</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -232,65 +232,53 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
-      <width>71</width>
-      <height>16</height>
+      <y>120</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Yamaha EBM8 Regular</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>Gain:</string>
+     <string>Gain</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="lblBPM">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
-      <width>71</width>
-      <height>16</height>
+      <y>150</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Yamaha EBM8 Regular</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>BPM:</string>
+     <string>BPM</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QSlider" name="sliderBPM">
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>140</y>
+      <y>150</y>
       <width>151</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -324,8 +312,8 @@
    <widget class="QPlainTextEdit" name="txtGainValue">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>110</y>
+      <x>44</x>
+      <y>120</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -343,8 +331,8 @@
    <widget class="QPlainTextEdit" name="txtBPMValue">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>140</y>
+      <x>44</x>
+      <y>150</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -363,7 +351,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>90</y>
       <width>241</width>
       <height>21</height>
      </rect>
@@ -373,7 +361,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>60</y>
       <width>241</width>
       <height>21</height>
      </rect>
@@ -383,7 +371,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>241</width>
       <height>21</height>
      </rect>
