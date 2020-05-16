@@ -10,15 +10,6 @@
     <height>490</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <family>Yamaha EBM8 Regular</family>
-    <pointsize>8</pointsize>
-    <weight>9</weight>
-    <italic>false</italic>
-    <bold>false</bold>
-   </font>
-  </property>
   <property name="windowTitle">
    <string>OctaChainer</string>
   </property>
@@ -26,7 +17,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">font: 75 8pt &quot;Yamaha EBM8 Regular&quot;;</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidget">
