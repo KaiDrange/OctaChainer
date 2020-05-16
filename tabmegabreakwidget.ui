@@ -117,13 +117,10 @@ selection-background-color: rgb(170, 170, 127);</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Play</string>
@@ -136,13 +133,10 @@ selection-background-color: rgb(170, 170, 127);</string>
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Stop</string>
@@ -165,13 +159,10 @@ selection-background-color: rgb(170, 170, 127);</string>
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Remove</string>
@@ -392,13 +383,10 @@ selection-background-color: rgb(170, 170, 127);</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Add</string>
@@ -577,13 +565,10 @@ selection-background-color: rgb(170, 170, 127);</string>
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>425</y>
+     <y>421</y>
      <width>251</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Create</string>

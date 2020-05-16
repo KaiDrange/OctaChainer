@@ -17,13 +17,10 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>320</y>
+     <y>316</y>
      <width>261</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>Add silent slice</string>
@@ -49,13 +46,13 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&amp;Remove</string>
@@ -68,13 +65,13 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&amp;Add</string>
@@ -87,13 +84,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&amp;Play</string>
@@ -189,13 +186,13 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>419</y>
+     <y>421</y>
      <width>251</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&amp;Create</string>
@@ -480,13 +477,13 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>425</y>
+     <y>421</y>
      <width>81</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>&amp;Stop</string>
