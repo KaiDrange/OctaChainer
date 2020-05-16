@@ -51,14 +51,11 @@
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>610</x>
      <y>10</y>
-     <width>81</width>
+     <width>91</width>
      <height>101</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="title">
     <string>Samplerate</string>
@@ -68,7 +65,7 @@
      <rect>
       <x>10</x>
       <y>40</y>
-      <width>61</width>
+      <width>71</width>
       <height>18</height>
      </rect>
     </property>
@@ -87,7 +84,7 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>61</width>
+      <width>71</width>
       <height>18</height>
      </rect>
     </property>
@@ -103,7 +100,7 @@
      <rect>
       <x>10</x>
       <y>80</y>
-      <width>61</width>
+      <width>71</width>
       <height>18</height>
      </rect>
     </property>
@@ -119,7 +116,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>61</width>
+      <width>71</width>
       <height>18</height>
      </rect>
     </property>
@@ -134,14 +131,11 @@
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>526</x>
      <y>10</y>
      <width>81</width>
      <height>101</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="title">
     <string>Channels</string>
@@ -386,9 +380,6 @@
      <width>81</width>
      <height>101</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="title">
     <string>Bitrate</string>
