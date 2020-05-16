@@ -559,7 +559,7 @@
     <string>Space</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lblSliceCOunt">
+  <widget class="QLabel" name="lblSliceCount">
    <property name="geometry">
     <rect>
      <x>380</x>
