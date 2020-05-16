@@ -35,10 +35,6 @@
    <property name="acceptDrops">
     <bool>true</bool>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);
-selection-background-color: rgb(170, 170, 127);</string>
-   </property>
    <property name="editTriggers">
     <set>QAbstractItemView::EditKeyPressed</set>
    </property>
