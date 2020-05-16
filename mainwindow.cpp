@@ -16,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     megabreakTab = new TabMegabreakWidget(this);
     ui->tabWidget->addTab(megabreakTab, tr("Megabreak"));
 
+    // Set action shortcuts.
+    ui->actionNew->setShortcut(QKeySequence::New);
+    ui->actionSave->setShortcut(QKeySequence::Save);
+    ui->openProject->setShortcut(QKeySequence::Open);
+
     setAcceptDrops(true);
     readOptions();
     clearProject();
