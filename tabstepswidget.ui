@@ -19,7 +19,7 @@
      <x>20</x>
      <y>160</y>
      <width>261</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -213,7 +213,7 @@
       <x>10</x>
       <y>90</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -223,7 +223,7 @@
       <x>10</x>
       <y>60</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -233,7 +233,7 @@
       <x>10</x>
       <y>30</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
