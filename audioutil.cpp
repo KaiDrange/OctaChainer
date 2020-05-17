@@ -3,7 +3,7 @@
 
 namespace AudioUtil {
 
-QStringList audioExtensions = { "wav", "aif", "ogg", "flac", "iff", "svx" };
+QStringList audioExtensions = { "wav", "caf", "aif", "ogg", "flac", "iff", "svx" };
 
 bool isAudioFileName(QString file)
 {
