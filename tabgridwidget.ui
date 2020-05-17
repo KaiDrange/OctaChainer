@@ -10,6 +10,9 @@
     <height>455</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -559,9 +562,6 @@
      <width>421</width>
      <height>401</height>
     </rect>
-   </property>
-   <property name="acceptDrops">
-    <bool>true</bool>
    </property>
    <property name="editTriggers">
     <set>QAbstractItemView::EditKeyPressed</set>
