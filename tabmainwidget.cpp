@@ -139,7 +139,7 @@ void TabMainWidget::updateUIafterCreateDone()
 void TabMainWidget::updateSliceCount()
 {
     int count = ui->listSlices->count();
-    ui->lblSliceCOunt->setText(QString::number(count));
+    ui->lblSliceCount->setText(QString::number(count));
     if (count < 1)
         ui->btnCreate->setEnabled(false);
     else

@@ -7,17 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>490</height>
+    <height>500</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <family>Yamaha EBM8 Regular</family>
-    <pointsize>8</pointsize>
-    <weight>9</weight>
-    <italic>false</italic>
-    <bold>false</bold>
-   </font>
+  <property name="minimumSize">
+   <size>
+    <width>710</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>710</width>
+    <height>500</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>OctaChainer</string>
@@ -26,7 +29,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">font: 75 8pt &quot;Yamaha EBM8 Regular&quot;;</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -36,9 +39,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>9</y>
       <width>710</width>
-      <height>520</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -80,16 +83,10 @@
    <property name="text">
     <string>Open project</string>
    </property>
-   <property name="shortcut">
-    <string>Meta+O</string>
-   </property>
   </action>
   <action name="actionSave">
    <property name="text">
     <string>Save project</string>
-   </property>
-   <property name="shortcut">
-    <string>Meta+S</string>
    </property>
   </action>
   <action name="actionOpen_wav">
@@ -105,9 +102,6 @@
   <action name="actionNew">
    <property name="text">
     <string>New</string>
-   </property>
-   <property name="shortcut">
-    <string>Meta+N</string>
    </property>
   </action>
   <action name="actionAbout">

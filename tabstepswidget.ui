@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>424</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,34 +19,18 @@
      <x>20</x>
      <y>160</y>
      <width>261</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QGraphicsView" name="graphicsView_2">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>390</y>
-     <width>91</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnCreate">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>390</y>
-     <width>251</width>
-     <height>23</height>
+     <x>619</x>
+     <y>421</y>
+     <width>81</width>
+     <height>25</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="text">
     <string>&amp;Create</string>
@@ -54,21 +38,8 @@
    <property name="shortcut">
     <string>Meta+C</string>
    </property>
-  </widget>
-  <widget class="QLabel" name="lblSliceCount">
-   <property name="geometry">
-    <rect>
-     <x>356</x>
-     <y>390</y>
-     <width>71</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>0</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   <property name="default">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
@@ -77,11 +48,11 @@
      <x>440</x>
      <y>40</y>
      <width>261</width>
-     <height>171</height>
+     <height>181</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
+    <string notr="true"/>
    </property>
    <property name="title">
     <string>OT Attributes</string>
@@ -90,9 +61,9 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>110</y>
+      <y>120</y>
       <width>151</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -121,19 +92,10 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
-      <width>71</width>
-      <height>16</height>
+      <y>120</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Yamaha EBM8 Regular</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -142,26 +104,20 @@
      <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
-     <string>Gain:</string>
+     <string>Gain</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="lblBPM">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
-      <width>71</width>
-      <height>16</height>
+      <y>150</y>
+      <width>31</width>
+      <height>21</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Yamaha EBM8 Regular</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -170,16 +126,19 @@
      <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
-     <string>BPM:</string>
+     <string>BPM</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QSlider" name="sliderBPM">
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>140</y>
+      <y>150</y>
       <width>151</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -213,14 +172,14 @@
    <widget class="QPlainTextEdit" name="txtGainValue">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>110</y>
+      <x>44</x>
+      <y>120</y>
       <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="verticalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -232,14 +191,14 @@
    <widget class="QPlainTextEdit" name="txtBPMValue">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>140</y>
+      <x>44</x>
+      <y>150</y>
       <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="verticalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -252,9 +211,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>90</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -262,9 +221,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>60</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -272,9 +231,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>241</width>
-      <height>21</height>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -282,20 +241,20 @@
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>360</y>
-     <width>231</width>
-     <height>31</height>
+     <x>448</x>
+     <y>421</y>
+     <width>170</width>
+     <height>25</height>
     </rect>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
-   </property>
-   <property name="value">
-    <number>0</number>
+   <property name="alignment">
+    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
    </property>
    <property name="textVisible">
     <bool>false</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -382,49 +341,67 @@
      <x>10</x>
      <y>40</y>
      <width>421</width>
-     <height>171</height>
+     <height>181</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(230, 230, 230, 150);</string>
    </property>
    <property name="title">
     <string>Slice options</string>
    </property>
-  </widget>
-  <widget class="QLabel" name="lblSliceCountText">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>390</y>
-     <width>91</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Yamaha EBM8 Regular</family>
-     <pointsize>8</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
-   </property>
-   <property name="text">
-    <string>Number of slices:</string>
-   </property>
+   <widget class="QLabel" name="lblSliceCount">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>150</y>
+      <width>71</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblSliceCountText">
+    <property name="geometry">
+     <rect>
+      <x>74</x>
+      <y>150</y>
+      <width>221</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Number of slices:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="graphicsView_2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>150</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <zorder>graphicsView_2</zorder>
+   <zorder>lblSliceCount</zorder>
+   <zorder>lblSliceCountText</zorder>
   </widget>
   <zorder>groupBox_5</zorder>
   <zorder>dropSlicePerSteps</zorder>
-  <zorder>graphicsView_2</zorder>
   <zorder>btnCreate</zorder>
-  <zorder>lblSliceCount</zorder>
   <zorder>groupBox_4</zorder>
   <zorder>progressBar</zorder>
   <zorder>label</zorder>
@@ -433,7 +410,6 @@
   <zorder>btnPlay</zorder>
   <zorder>btnStop</zorder>
   <zorder>chkTail</zorder>
-  <zorder>lblSliceCountText</zorder>
  </widget>
  <resources/>
  <connections/>
