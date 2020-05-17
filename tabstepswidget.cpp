@@ -1,5 +1,6 @@
 #include "tabstepswidget.h"
 #include "ui_tabstepswidget.h"
+#include "audioutil.h"
 
 #include "tabmainwidget.h"
 #include "ui_tabmainwidget.h"
@@ -253,7 +254,7 @@ void TabStepsWidget::updateCurrentSettings(ProjectSettings &settings)
 
 void TabStepsWidget::on_btnSelectFile_clicked()
 {
-    ui->txtAudiofile->setText(QFileDialog::getOpenFileName(this, "Select audio file", _defaultPathAudio, "wav or aif file (*.wav *.aif)"));
+    ui->txtAudiofile->setText(QFileDialog::getOpenFileName(this, "Select audio file", _defaultPathAudio, AudioUtil::audioFileFilter()));
     ui->btnCreate->setEnabled(ui->txtAudiofile->text() != "");
     updateSliceCount();
 }

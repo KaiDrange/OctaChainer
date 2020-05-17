@@ -20,7 +20,8 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    audioutil.cpp \
+    mainwindow.cpp \
     audiofactory.cpp \
     otwriter.cpp \
     tabmainwidget.cpp \
@@ -31,6 +32,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     audiofactory.h \
+    audioutil.h \
     otwriter.h \
     tabmainwidget.h \
     tabmegabreakwidget.h \

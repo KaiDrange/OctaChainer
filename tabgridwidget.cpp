@@ -1,5 +1,6 @@
 #include "tabgridwidget.h"
 #include "ui_tabgridwidget.h"
+#include "audioutil.h"
 
 TabGridWidget::TabGridWidget(QWidget *parent) :
     QWidget(parent),
@@ -149,7 +150,7 @@ void TabGridWidget::updateSliceCount()
 
 void TabGridWidget::on_btnAddWav_clicked()
 {
-    QStringList fileNames = QFileDialog::getOpenFileNames(this, "Select audio files", _defaultPathAudio, "audio files (*.wav *.aif *.ogg *.flac *.iff *.svx)");
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, "Select audio files", _defaultPathAudio, AudioUtil::audioFileFilter());
     addListItems(fileNames);
     updateSliceCount();
 }
@@ -185,15 +186,8 @@ void TabGridWidget::dropEvent(QDropEvent *event)
     for (int i = 0; i < urls.count(); i++)
     {
         QString localFile = urls[i].toLocalFile();
-        if (
-                localFile.endsWith(".wav", Qt::CaseInsensitive) ||
-                localFile.endsWith(".aif", Qt::CaseInsensitive) ||
-                localFile.endsWith(".ogg", Qt::CaseInsensitive) ||
-                localFile.endsWith(".flac", Qt::CaseInsensitive) ||
-                localFile.endsWith(".iff", Qt::CaseInsensitive) ||
-                localFile.endsWith(".svx", Qt::CaseInsensitive)
-            )
-            fileList.append(urls[i].toLocalFile());
+        if (AudioUtil::isAudioFileName(localFile))
+            fileList.append(localFile);
     }
     if (fileList.count() > 0)
     {
