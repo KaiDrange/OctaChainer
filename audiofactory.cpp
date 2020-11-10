@@ -452,9 +452,9 @@ void AudioFactory::createOutput_MegabreakMode() {
 
         QByteArray ba = inName.toLocal8Bit();
         SndfileHandle inFile = SndfileHandle(ba.data());
-        if (inFile.channels() > outFiles[i].channels())
+        if (inFile.channels() > sfinfo.channels)
             convertToMono = true;
-        else if (inFile.channels() < outFiles[i].channels())
+        else if (inFile.channels() < sfinfo.channels)
             convertToStereo = true;
 
         double normalizationFactor = findNormalizationFactor(&inFile);
