@@ -8,6 +8,7 @@
 #include <QMimeData>
 #include <QAudio>
 #include <QMediaPlayer>
+#include <QMessageBox>
 #include "projectsettings.h"
 #include "audiofactory.h"
 
@@ -55,7 +56,7 @@ private slots:
 private:
     Ui::TabMainWidget *ui;
     void playAudio();
-    void createWav(const QString destFilename);
+    void createWav(const QString destFilename, int startSlice);
     void updateSliceCount();
     void addListItems(const QStringList files);
     QMediaPlayer *mediaplayer;

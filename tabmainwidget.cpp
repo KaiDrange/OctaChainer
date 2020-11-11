@@ -84,7 +84,7 @@ void TabMainWidget::playAudio()
     }
 }
 
-void TabMainWidget::createWav(QString filename)
+void TabMainWidget::createWav(QString filename, int startSlice)
 {
     ui->btnCreate->setEnabled(false);
     ui->progressBar->setVisible(true);
@@ -110,7 +110,7 @@ void TabMainWidget::createWav(QString filename)
     int fadeOut = ui->dropFadeOut->currentData().toInt();
 
     QVector<QString> sourceFiles;
-    for (int i = 0; i < ui->listSlices->count(); i++)
+    for (int i = startSlice; i < ui->listSlices->count() && i < startSlice + 64; i++)
     {
         QString itemText = ui->listSlices->item(i)->text();
         sourceFiles.append(itemText.split(" [")[0]);
@@ -226,11 +226,23 @@ void TabMainWidget::on_btnRemove_clicked()
 
 void TabMainWidget::on_btnCreate_clicked()
 {
-    if (ui->listSlices->count() > 0)
+    if (ui->listSlices->count() == 0)
+            return;
+
+    int chainCount = (ui->listSlices->count() / 64) + 1;
+    if (chainCount > 1)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning: more than 64 chains", "This will create multiple wav files. Continue?", QMessageBox::Yes|QMessageBox::Cancel);
+        if (!(reply == QMessageBox::Yes))
+            return;
+    }
+
+    for (int i = 0; i < chainCount; i++)
     {
         QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", _defaultPathOutput, "Wave file (*.wav)");
         if (!destinationFile.isEmpty())
-            createWav(destinationFile);
+            createWav(destinationFile, i*64);
     }
 }
 
