@@ -69,8 +69,8 @@ TabMegabreakWidget::TabMegabreakWidget(QWidget *parent) :
 
     ui->btnCreate->setEnabled(false);
 
-    QShortcut *playHotkey = new QShortcut(QKeySequence(" "), this);
-    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_btnPlay_clicked()));
+    QShortcut *playHotkey = new QShortcut(Qt::Key_Space, this);
+    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_playAudio_toggled()));
     mediaplayer = new QMediaPlayer;
 }
 
@@ -176,9 +176,19 @@ void TabMegabreakWidget::on_txtGainValue_textChanged()
         ui->sliderGain->setValue(sliderValue);
 }
 
+void TabMegabreakWidget::on_playAudio_toggled()
+{
+
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
+        mediaplayer->stop();
+    else if (ui->listSlices->selectedItems().length() == 1)
+        playAudio();
+ }
+
+
 void TabMegabreakWidget::playAudio()
 {
-    if (!mediaplayer->StoppedState)
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
         mediaplayer->stop();
 
     QString itemText = ui->listSlices->selectedItems()[0]->text();
@@ -325,7 +335,7 @@ void TabMegabreakWidget::dropEvent(QDropEvent *event)
 
 void TabMegabreakWidget::on_btnRemove_clicked()
 {
-    if (ui->listSlices->selectedItems().count() == 1)
+    while (ui->listSlices->selectedItems().count() > 0)
         delete ui->listSlices->selectedItems()[0];
     updateSliceCount();
 }

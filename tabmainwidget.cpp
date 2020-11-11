@@ -57,8 +57,8 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
 
     ui->btnCreate->setEnabled(false);
 
-    QShortcut *playHotkey = new QShortcut(QKeySequence(" "), this);
-    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_btnPlay_clicked()));
+    QShortcut *playHotkey = new QShortcut(Qt::Key_Space, this);
+    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_playAudio_toggled()));
     mediaplayer = new QMediaPlayer;
 }
 
@@ -70,7 +70,7 @@ TabMainWidget::~TabMainWidget()
 
 void TabMainWidget::playAudio()
 {
-    if (!mediaplayer->StoppedState)
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
         mediaplayer->stop();
 
     if (ui->listSlices->selectedItems().length() != 1)
@@ -83,6 +83,15 @@ void TabMainWidget::playAudio()
         mediaplayer->play();
     }
 }
+
+void TabMainWidget::on_playAudio_toggled()
+{
+
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
+        mediaplayer->stop();
+    else if (ui->listSlices->selectedItems().length() == 1)
+        playAudio();
+ }
 
 void TabMainWidget::createWav(QString filename, int startSlice)
 {
@@ -161,7 +170,7 @@ void TabMainWidget::on_btnAddWav_clicked()
 
 void TabMainWidget::on_btnPlay_clicked()
 {
-    if (ui->listSlices->selectedItems().count() > 0)
+    if (ui->listSlices->selectedItems().count() == 1)
         playAudio();
 }
 
@@ -219,7 +228,7 @@ void TabMainWidget::dropEvent(QDropEvent *event)
 
 void TabMainWidget::on_btnRemove_clicked()
 {
-    if (ui->listSlices->selectedItems().count() == 1)
+    while (ui->listSlices->selectedItems().count() > 0)
         delete ui->listSlices->selectedItems()[0];
     updateSliceCount();
 }
@@ -342,7 +351,7 @@ void TabMainWidget::configure(ProjectSettings &settings)
     ui->sliderBPM->setValue(settings.tempo);
     ui->dropNormalize->setCurrentIndex(settings.normalizationMode);
 
-    if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
+    if (ui->listSlices->count() > 0)
         ui->btnCreate->setEnabled(true);
 
     ui->dropFadeIn->setCurrentIndex(settings.fadein);

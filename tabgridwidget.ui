@@ -61,7 +61,7 @@
     <string>&amp;Remove</string>
    </property>
    <property name="shortcut">
-    <string>Meta+D</string>
+    <string>Alt+R</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnAddWav">
@@ -80,7 +80,7 @@
     <string>&amp;Add</string>
    </property>
    <property name="shortcut">
-    <string>Meta+A</string>
+    <string>Alt+A</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnPlay">
@@ -99,7 +99,7 @@
     <string>&amp;Play</string>
    </property>
    <property name="shortcut">
-    <string>Meta+P</string>
+    <string>Alt+P</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_3">
@@ -195,7 +195,7 @@
     <string>&amp;Create</string>
    </property>
    <property name="shortcut">
-    <string>Meta+C</string>
+    <string>Alt+C</string>
    </property>
    <property name="default">
     <bool>true</bool>
@@ -474,7 +474,7 @@
     <string>&amp;Stop</string>
    </property>
    <property name="shortcut">
-    <string>Space</string>
+    <string>Alt+S</string>
    </property>
   </widget>
   <widget class="QProgressBar" name="progressBar">
