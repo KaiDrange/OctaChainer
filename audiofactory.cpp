@@ -410,6 +410,7 @@ void AudioFactory::createOutput_StepsMode()
     delete otWriter;
 }
 
+
 void AudioFactory::createOutput_MegabreakMode() {
     if (sourceFiles.count() == 0 || sourceFiles.count() > 64)
         return;
@@ -464,7 +465,7 @@ void AudioFactory::createOutput_MegabreakMode() {
         sf_count_t previousReadFramesTotal = 0;
         sf_count_t sliceStartPoint = totalWrittenFrames[0];
         int currentOutIndex = 0;
-        sf_count_t sliceLength = inFile.frames()/this->megabreakFiles;
+        float sliceLength = (inFile.frames()*1.0f)/(this->megabreakFiles*1.0f);
 
         while ((readFrames = inFile.read(buffer, BUFFER_LENGTH)) > 0)
         {
@@ -498,37 +499,28 @@ void AudioFactory::createOutput_MegabreakMode() {
                 }
             }
 
-            if (convertToMono)
+
+            for (int j = 0; j < readFrames; j+= inFile.channels())
             {
-                for (int j = 0; j < readFrames; j+=2)
+                int frame[2];
+                if (convertToMono)
+                    frame[0] = buffer[j]*0.5+buffer[j+1]*0.5;
+                else if (convertToStereo)
                 {
-                    int monoFrame = buffer[j]*0.5+buffer[j+1]*0.5;
-                    if ((previousReadFramesTotal + j)/2 > sliceLength*(currentOutIndex+1))
-                        currentOutIndex++;
-                    if (currentOutIndex < this->megabreakFiles)
-                        totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(&monoFrame, 1);
-                }
-            }
-            else if (convertToStereo)
-            {
-                for (int j = 0; j < readFrames; j++)
-                {
-                    int stereoFrames[2] = { buffer[j], buffer[j] };
-                    if (previousReadFramesTotal + j > sliceLength*(currentOutIndex+1))
-                        currentOutIndex++;
-                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(stereoFrames, 2);
-                }
-            }
-            else {
-                if (previousReadFramesTotal + readFrames > sliceLength*(currentOutIndex+1)*sfinfo.channels) {
-                    sf_count_t framesForNextSlice = previousReadFramesTotal + readFrames - sliceLength*(currentOutIndex+1)*sfinfo.channels;
-                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(buffer, readFrames - framesForNextSlice);
-                    currentOutIndex++;
-                    if (currentOutIndex < this->megabreakFiles)
-                        totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(&buffer[readFrames - framesForNextSlice], framesForNextSlice);
+                    frame[0] = buffer[j];
+                    frame[1] = buffer[j];
                 }
                 else
-                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(buffer, readFrames);
+                {
+                    frame[0] = buffer[j];
+                    if (inFile.channels() > 1)
+                        frame[1] = buffer[j+1];
+                }
+                if (previousReadFramesTotal + j > sliceLength*(currentOutIndex+1)*inFile.channels())
+                    currentOutIndex++;
+
+                if (currentOutIndex < this->megabreakFiles)
+                    totalWrittenFrames[currentOutIndex] += outFiles[currentOutIndex].write(frame, sfinfo.channels);
             }
             previousReadFramesTotal += readFrames;
         }

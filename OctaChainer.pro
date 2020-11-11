@@ -33,7 +33,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     audiofactory.h \
     audioutil.h \
-    libsndfile/include/sndfile.hh \
     otwriter.h \
     tabmainwidget.h \
     tabmegabreakwidget.h \
@@ -47,10 +46,21 @@ FORMS    += mainwindow.ui \
     tabgridwidget.ui \
     tabstepswidget.ui
 
+macx {
+    LIBS += -L$$PWD/libsndfile/lib/ -lsndfile.1
+    INCLUDEPATH += $$PWD/libsndfile/include
+    DEPENDPATH += $$PWD/libsndfile/include
+    #ICON = <app_icon>.icns
+}
+win32 {
+    LIBS += -L$$PWD/libsndfile/lib/ -llibsndfile-1
+    INCLUDEPATH += $$PWD/libsndfile/include
+    DEPENDPATH += $$PWD/libsndfile/include
+    RC_ICONS += octachainer_logo.ico
+}
 
-win32: LIBS += -L$$PWD/libsndfile/lib/ -llibsndfile-1
-
-INCLUDEPATH += $$PWD/libsndfile/include
-DEPENDPATH += $$PWD/libsndfile/include
-
-win32:RC_ICONS += octachainer_logo.ico
+linux {
+    *-g++{
+        LIBS+=-lsndfile
+    }
+}
