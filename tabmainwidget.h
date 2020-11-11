@@ -43,6 +43,7 @@ private slots:
     void on_btnPlay_clicked();
     void on_btnStop_clicked();
     void on_listSlices_doubleClicked(const QModelIndex &index);
+    void on_listSlices_itemSelectionChanged();
     void on_btnRemove_clicked();
     void on_btnCreate_clicked();
     void on_sliderGain_valueChanged(int value);

@@ -7,6 +7,8 @@ TabGridWidget::TabGridWidget(QWidget *parent) :
     ui(new Ui::TabGridWidget)
 {
     ui->setupUi(this);
+    ui->listSlices->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->btnPlay->setEnabled(false);
     ui->progressBar->setVisible(false);
     ui->dropLoop->addItem("Loop off", Loop_t::NoLoop);
     ui->dropLoop->addItem("Loop on", Loop_t::Loop);
@@ -166,6 +168,12 @@ void TabGridWidget::on_listSlices_doubleClicked(const QModelIndex &index)
     playAudio();
 }
 
+void TabGridWidget::on_listSlices_itemSelectionChanged()
+{
+    ui->btnPlay->setEnabled(ui->listSlices->selectedItems().length() == 1);
+}
+
+
 void TabGridWidget::on_btnStop_clicked()
 {
     mediaplayer->stop();
@@ -186,8 +194,20 @@ void TabGridWidget::dropEvent(QDropEvent *event)
     for (int i = 0; i < urls.count(); i++)
     {
         QString localFile = urls[i].toLocalFile();
-        if (AudioUtil::isAudioFileName(localFile))
+        if (QFileInfo(localFile).isDir())
+        {
+            QStringList dirContents = QDir(localFile).entryList();
+            for (int j = 0; j < dirContents.length(); j++)
+            {
+                 QString path = localFile + "/" + dirContents[j];
+                if (QFileInfo(path).isFile() && AudioUtil::isAudioFileName(path))
+                    fileList.append(path);
+            }
+        }
+        else if (QFileInfo(localFile).isFile() && AudioUtil::isAudioFileName(localFile))
+        {
             fileList.append(localFile);
+        }
     }
     if (fileList.count() > 0)
     {

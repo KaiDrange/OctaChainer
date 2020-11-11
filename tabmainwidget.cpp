@@ -7,6 +7,8 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
     ui(new Ui::TabMainWidget)
 {
     ui->setupUi(this);
+    ui->listSlices->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->btnPlay->setEnabled(false);
     ui->progressBar->setVisible(false);
     ui->dropLoop->addItem("Loop off", Loop_t::NoLoop);
     ui->dropLoop->addItem("Loop on", Loop_t::Loop);
@@ -70,6 +72,9 @@ void TabMainWidget::playAudio()
 {
     if (!mediaplayer->StoppedState)
         mediaplayer->stop();
+
+    if (ui->listSlices->selectedItems().length() != 1)
+        return;
 
     QString itemText = ui->listSlices->selectedItems()[0]->text();
     if (itemText != SILENT_SLICE_NAME)
@@ -160,6 +165,11 @@ void TabMainWidget::on_btnPlay_clicked()
         playAudio();
 }
 
+void TabMainWidget::on_listSlices_itemSelectionChanged()
+{
+    ui->btnPlay->setEnabled(ui->listSlices->selectedItems().length() == 1);
+}
+
 void TabMainWidget::on_listSlices_doubleClicked(const QModelIndex &index)
 {
     playAudio();
@@ -185,8 +195,20 @@ void TabMainWidget::dropEvent(QDropEvent *event)
     for (int i = 0; i < urls.count(); i++)
     {
         QString localFile = urls[i].toLocalFile();
-        if (AudioUtil::isAudioFileName(localFile))
+        if (QFileInfo(localFile).isDir())
+        {
+            QStringList dirContents = QDir(localFile).entryList();
+            for (int j = 0; j < dirContents.length(); j++)
+            {
+                 QString path = localFile + "/" + dirContents[j];
+                if (QFileInfo(path).isFile() && AudioUtil::isAudioFileName(path))
+                    fileList.append(path);
+            }
+        }
+        else if (QFileInfo(localFile).isFile() && AudioUtil::isAudioFileName(localFile))
+        {
             fileList.append(localFile);
+        }
     }
     if (fileList.count() > 0)
     {
