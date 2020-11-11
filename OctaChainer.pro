@@ -60,7 +60,7 @@ win32 {
 }
 
 linux {
-    *-g++{
+    *-g++*{
         LIBS+=-lsndfile
     }
 }
