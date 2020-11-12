@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include "projectsettings.h"
 #include "audiofactory.h"
+#include "sliceListItem.h"
 
 extern QString _defaultPathAudio;
 extern QString _defaultPathProjects;

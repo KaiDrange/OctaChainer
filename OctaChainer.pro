@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     audiofactory.cpp \
     otwriter.cpp \
+    sliceListItem.cpp \
     tabmainwidget.cpp \
     tabmegabreakwidget.cpp \
     tabgridwidget.cpp \
@@ -34,6 +35,7 @@ HEADERS  += mainwindow.h \
     audiofactory.h \
     audioutil.h \
     otwriter.h \
+    sliceListItem.h \
     tabmainwidget.h \
     tabmegabreakwidget.h \
     tabgridwidget.h \

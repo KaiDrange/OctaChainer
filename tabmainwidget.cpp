@@ -76,10 +76,10 @@ void TabMainWidget::playAudio()
     if (ui->listSlices->selectedItems().length() != 1)
         return;
 
-    QString itemText = ui->listSlices->selectedItems()[0]->text();
-    if (itemText != SILENT_SLICE_NAME)
+    SliceListItem* listItem = (SliceListItem*)ui->listSlices->selectedItems()[0];
+    if (listItem->file != SILENT_SLICE_NAME)
     {
-        mediaplayer->setMedia(QUrl::fromLocalFile(itemText.split(" [")[0]));
+        mediaplayer->setMedia(QUrl::fromLocalFile(listItem->file));
         mediaplayer->play();
     }
 }
@@ -121,8 +121,8 @@ void TabMainWidget::createWav(QString filename, int startSlice)
     QVector<QString> sourceFiles;
     for (int i = startSlice; i < ui->listSlices->count() && i < startSlice + 64; i++)
     {
-        QString itemText = ui->listSlices->item(i)->text();
-        sourceFiles.append(itemText.split(" [")[0]);
+        SliceListItem* listItem = (SliceListItem*)ui->listSlices->item(i);
+        sourceFiles.append(listItem->file);
     }
 
     QThread *workThread = new QThread;
@@ -259,7 +259,8 @@ void TabMainWidget::addListItems(const QStringList files)
 {
     for (int i = 0; i < files.length(); i++)
     {
-        ui->listSlices->addItem(files[i] + AudioFactory::getFormatString(files[i]));
+        SliceListItem *newItem = new SliceListItem(files[i], AudioFactory::getFormatString(files[i]));
+        ui->listSlices->addItem(newItem);
     }
 }
 
@@ -331,8 +332,7 @@ void TabMainWidget::reset()
 
 void TabMainWidget::configure(ProjectSettings &settings)
 {
-    for (int i = 0; i < settings.sampleCount; i++)
-        ui->listSlices->addItem(settings.samplePaths[i]);
+    addListItems(settings.samplePaths.toList());
 
     ui->radioMono->setChecked(settings.channelCount == 1);
     if (settings.sampleRate == 32000)
@@ -382,5 +382,5 @@ void TabMainWidget::updateCurrentSettings(ProjectSettings &settings)
     settings.fadein = ui->dropFadeIn->currentIndex();
     settings.fadeout = ui->dropFadeOut->currentIndex();
     for (int i = 0; i < ui->listSlices->count(); i++)
-        settings.samplePaths.append(ui->listSlices->item(i)->text());
+        settings.samplePaths.append(((SliceListItem*)ui->listSlices->item(i))->file);
 }
