@@ -7,6 +7,8 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
     ui(new Ui::TabMainWidget)
 {
     ui->setupUi(this);
+    ui->listSlices->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->btnPlay->setEnabled(false);
     ui->progressBar->setVisible(false);
     ui->dropLoop->addItem("Loop off", Loop_t::NoLoop);
     ui->dropLoop->addItem("Loop on", Loop_t::Loop);
@@ -55,8 +57,8 @@ TabMainWidget::TabMainWidget(QWidget *parent) :
 
     ui->btnCreate->setEnabled(false);
 
-    QShortcut *playHotkey = new QShortcut(QKeySequence(" "), this);
-    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_btnPlay_clicked()));
+    QShortcut *playHotkey = new QShortcut(Qt::Key_Space, this);
+    QObject::connect(playHotkey, SIGNAL(activated()), this, SLOT(on_playAudio_toggled()));
     mediaplayer = new QMediaPlayer;
 }
 
@@ -68,18 +70,30 @@ TabMainWidget::~TabMainWidget()
 
 void TabMainWidget::playAudio()
 {
-    if (!mediaplayer->StoppedState)
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
         mediaplayer->stop();
 
-    QString itemText = ui->listSlices->selectedItems()[0]->text();
-    if (itemText != SILENT_SLICE_NAME)
+    if (ui->listSlices->selectedItems().length() != 1)
+        return;
+
+    SliceListItem* listItem = (SliceListItem*)ui->listSlices->selectedItems()[0];
+    if (listItem->file != SILENT_SLICE_NAME)
     {
-        mediaplayer->setMedia(QUrl::fromLocalFile(itemText.split(" [")[0]));
+        mediaplayer->setMedia(QUrl::fromLocalFile(listItem->file));
         mediaplayer->play();
     }
 }
 
-void TabMainWidget::createWav(QString filename)
+void TabMainWidget::on_playAudio_toggled()
+{
+
+    if (mediaplayer->state() == QMediaPlayer::PlayingState)
+        mediaplayer->stop();
+    else if (ui->listSlices->selectedItems().length() == 1)
+        playAudio();
+ }
+
+void TabMainWidget::createWav(QString filename, int startSlice)
 {
     ui->btnCreate->setEnabled(false);
     ui->progressBar->setVisible(true);
@@ -105,10 +119,10 @@ void TabMainWidget::createWav(QString filename)
     int fadeOut = ui->dropFadeOut->currentData().toInt();
 
     QVector<QString> sourceFiles;
-    for (int i = 0; i < ui->listSlices->count(); i++)
+    for (int i = startSlice; i < ui->listSlices->count() && i < startSlice + 64; i++)
     {
-        QString itemText = ui->listSlices->item(i)->text();
-        sourceFiles.append(itemText.split(" [")[0]);
+        SliceListItem* listItem = (SliceListItem*)ui->listSlices->item(i);
+        sourceFiles.append(listItem->file);
     }
 
     QThread *workThread = new QThread;
@@ -156,8 +170,13 @@ void TabMainWidget::on_btnAddWav_clicked()
 
 void TabMainWidget::on_btnPlay_clicked()
 {
-    if (ui->listSlices->selectedItems().count() > 0)
+    if (ui->listSlices->selectedItems().count() == 1)
         playAudio();
+}
+
+void TabMainWidget::on_listSlices_itemSelectionChanged()
+{
+    ui->btnPlay->setEnabled(ui->listSlices->selectedItems().length() == 1);
 }
 
 void TabMainWidget::on_listSlices_doubleClicked(const QModelIndex &index)
@@ -185,8 +204,20 @@ void TabMainWidget::dropEvent(QDropEvent *event)
     for (int i = 0; i < urls.count(); i++)
     {
         QString localFile = urls[i].toLocalFile();
-        if (AudioUtil::isAudioFileName(localFile))
+        if (QFileInfo(localFile).isDir())
+        {
+            QStringList dirContents = QDir(localFile).entryList();
+            for (int j = 0; j < dirContents.length(); j++)
+            {
+                 QString path = localFile + "/" + dirContents[j];
+                if (QFileInfo(path).isFile() && AudioUtil::isAudioFileName(path))
+                    fileList.append(path);
+            }
+        }
+        else if (QFileInfo(localFile).isFile() && AudioUtil::isAudioFileName(localFile))
+        {
             fileList.append(localFile);
+        }
     }
     if (fileList.count() > 0)
     {
@@ -197,18 +228,30 @@ void TabMainWidget::dropEvent(QDropEvent *event)
 
 void TabMainWidget::on_btnRemove_clicked()
 {
-    if (ui->listSlices->selectedItems().count() == 1)
+    while (ui->listSlices->selectedItems().count() > 0)
         delete ui->listSlices->selectedItems()[0];
     updateSliceCount();
 }
 
 void TabMainWidget::on_btnCreate_clicked()
 {
-    if (ui->listSlices->count() > 0)
+    if (ui->listSlices->count() == 0)
+            return;
+
+    int chainCount = (ui->listSlices->count() / 64) + 1;
+    if (chainCount > 1)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning: more than 64 chains", "This will create multiple wav files. Continue?", QMessageBox::Yes|QMessageBox::Cancel);
+        if (!(reply == QMessageBox::Yes))
+            return;
+    }
+
+    for (int i = 0; i < chainCount; i++)
     {
         QString destinationFile = QFileDialog::getSaveFileName(this, "Save as...", _defaultPathOutput, "Wave file (*.wav)");
         if (!destinationFile.isEmpty())
-            createWav(destinationFile);
+            createWav(destinationFile, i*64);
     }
 }
 
@@ -216,7 +259,8 @@ void TabMainWidget::addListItems(const QStringList files)
 {
     for (int i = 0; i < files.length(); i++)
     {
-        ui->listSlices->addItem(files[i] + AudioFactory::getFormatString(files[i]));
+        SliceListItem *newItem = new SliceListItem(files[i], AudioFactory::getFormatString(files[i]));
+        ui->listSlices->addItem(newItem);
     }
 }
 
@@ -288,8 +332,7 @@ void TabMainWidget::reset()
 
 void TabMainWidget::configure(ProjectSettings &settings)
 {
-    for (int i = 0; i < settings.sampleCount; i++)
-        ui->listSlices->addItem(settings.samplePaths[i]);
+    addListItems(settings.samplePaths.toList());
 
     ui->radioMono->setChecked(settings.channelCount == 1);
     if (settings.sampleRate == 32000)
@@ -308,7 +351,7 @@ void TabMainWidget::configure(ProjectSettings &settings)
     ui->sliderBPM->setValue(settings.tempo);
     ui->dropNormalize->setCurrentIndex(settings.normalizationMode);
 
-    if (ui->listSlices->count() > 0 && ui->listSlices->count() < 65)
+    if (ui->listSlices->count() > 0)
         ui->btnCreate->setEnabled(true);
 
     ui->dropFadeIn->setCurrentIndex(settings.fadein);
@@ -339,5 +382,5 @@ void TabMainWidget::updateCurrentSettings(ProjectSettings &settings)
     settings.fadein = ui->dropFadeIn->currentIndex();
     settings.fadeout = ui->dropFadeOut->currentIndex();
     for (int i = 0; i < ui->listSlices->count(); i++)
-        settings.samplePaths.append(ui->listSlices->item(i)->text());
+        settings.samplePaths.append(((SliceListItem*)ui->listSlices->item(i))->file);
 }

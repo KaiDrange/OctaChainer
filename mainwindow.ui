@@ -7,23 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>500</height>
+    <height>520</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>710</width>
-    <height>500</height>
+    <height>520</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>710</width>
-    <height>500</height>
+    <height>520</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>OctaChainer</string>
+   <string>OctaChainer v1.3.1</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -55,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>710</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

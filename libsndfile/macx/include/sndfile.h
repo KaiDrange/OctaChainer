@@ -92,6 +92,10 @@ enum
 	SF_FORMAT_GSM610		= 0x0020,		/* GSM 6.10 encoding. */
 	SF_FORMAT_VOX_ADPCM		= 0x0021,		/* OKI / Dialogix ADPCM */
 
+	SF_FORMAT_NMS_ADPCM_16	= 0x0022,		/* 16kbs NMS G721-variant encoding. */
+	SF_FORMAT_NMS_ADPCM_24	= 0x0023,		/* 24kbs NMS G721-variant encoding. */
+	SF_FORMAT_NMS_ADPCM_32	= 0x0024,		/* 32kbs NMS G721-variant encoding. */
+
 	SF_FORMAT_G721_32		= 0x0030,		/* 32kbs G721 ADPCM encoding. */
 	SF_FORMAT_G723_24		= 0x0031,		/* 24kbs G723 ADPCM encoding. */
 	SF_FORMAT_G723_40		= 0x0032,		/* 40kbs G723 ADPCM encoding. */
@@ -105,6 +109,7 @@ enum
 	SF_FORMAT_DPCM_16		= 0x0051,		/* 16 bit differential PCM (XI only) */
 
 	SF_FORMAT_VORBIS		= 0x0060,		/* Xiph Vorbis encoding. */
+	SF_FORMAT_OPUS			= 0x0064,		/* Xiph/Skype Opus encoding. */
 
 	SF_FORMAT_ALAC_16		= 0x0070,		/* Apple Lossless Audio Codec (16 bit). */
 	SF_FORMAT_ALAC_20		= 0x0071,		/* Apple Lossless Audio Codec (20 bit). */
@@ -160,7 +165,6 @@ enum
 	SFC_GET_MAX_ALL_CHANNELS		= 0x1045,
 
 	SFC_SET_ADD_PEAK_CHUNK			= 0x1050,
-	SFC_SET_ADD_HEADER_PAD_CHUNK	= 0x1051,
 
 	SFC_UPDATE_HEADER_NOW			= 0x1060,
 	SFC_SET_UPDATE_HEADER_AUTO		= 0x1061,
@@ -210,20 +214,28 @@ enum
 
 	SFC_SET_VBR_ENCODING_QUALITY	= 0x1300,
 	SFC_SET_COMPRESSION_LEVEL		= 0x1301,
+	SFC_SET_OGG_PAGE_LATENCY_MS		= 0x1302,
+	SFC_SET_OGG_PAGE_LATENCY		= 0x1303,
 
 	/* Cart Chunk support */
 	SFC_SET_CART_INFO				= 0x1400,
 	SFC_GET_CART_INFO				= 0x1401,
 
+	/* Opus files original samplerate metadata */
+	SFC_SET_ORIGINAL_SAMPLERATE		= 0x1500,
+	SFC_GET_ORIGINAL_SAMPLERATE		= 0x1501,
+
 	/* Following commands for testing only. */
 	SFC_TEST_IEEE_FLOAT_REPLACE		= 0x6001,
 
 	/*
-	** SFC_SET_ADD_* values are deprecated and will disappear at some
+	** These SFC_SET_ADD_* values are deprecated and will disappear at some
 	** time in the future. They are guaranteed to be here up to and
 	** including version 1.0.8 to avoid breakage of existing software.
 	** They currently do nothing and will continue to do nothing.
 	*/
+	SFC_SET_ADD_HEADER_PAD_CHUNK	= 0x1051,
+
 	SFC_SET_ADD_DITHER_ON_WRITE		= 0x1070,
 	SFC_SET_ADD_DITHER_ON_READ		= 0x1071
 } ;
@@ -333,11 +345,8 @@ typedef	struct SNDFILE_tag	SNDFILE ;
 ** and the Microsoft compiler.
 */
 
-#if (defined (_MSCVER) || defined (_MSC_VER) && (_MSC_VER < 1310))
-typedef __int64		sf_count_t ;
-#define SF_COUNT_MAX		0x7fffffffffffffffi64
-#else
 typedef int64_t	sf_count_t ;
+#ifndef SF_COUNT_MAX
 #define SF_COUNT_MAX		0x7FFFFFFFFFFFFFFFLL
 #endif
 
@@ -492,7 +501,12 @@ typedef struct
 				uint32_t	time_reference_high ; \
 				short		version ; \
 				char		umid [64] ; \
-				char		reserved [190] ; \
+				int16_t	loudness_value ; \
+				int16_t	loudness_range ; \
+				int16_t	max_true_peak_level ; \
+				int16_t	max_momentary_loudness ; \
+				int16_t	max_shortterm_loudness ; \
+				char		reserved [180] ; \
 				uint32_t	coding_history_size ; \
 				char		coding_history [coding_hist_size] ; \
 			}
@@ -610,7 +624,9 @@ int		sf_perror		(SNDFILE *sndfile) ;
 int		sf_error_str	(SNDFILE *sndfile, char* str, size_t len) ;
 
 
-/* Return TRUE if fields of the SF_INFO struct are a valid combination of values. */
+/* Allow the caller to retrieve information from or change aspects of the
+** library behaviour.
+*/
 
 int		sf_command	(SNDFILE *sndfile, int command, void *data, int datasize) ;
 
@@ -854,4 +870,3 @@ sf_get_chunk_data (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
 #endif	/* __cplusplus */
 
 #endif	/* SNDFILE_H */
-

@@ -119,7 +119,7 @@
     <string>&amp;Play</string>
    </property>
    <property name="shortcut">
-    <string>Meta+P</string>
+    <string>Alt+P</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnStop">
@@ -135,7 +135,7 @@
     <string>&amp;Stop</string>
    </property>
    <property name="shortcut">
-    <string>Space</string>
+    <string>Alt+S</string>
    </property>
   </widget>
   <widget class="QComboBox" name="dropFadeOut">
@@ -161,7 +161,7 @@
     <string>&amp;Remove</string>
    </property>
    <property name="shortcut">
-    <string>Meta+D</string>
+    <string>Alt+R</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
@@ -370,7 +370,7 @@
     <string>&amp;Add</string>
    </property>
    <property name="shortcut">
-    <string>Meta+A</string>
+    <string>Alt+A</string>
    </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsView_2">
@@ -546,7 +546,7 @@
     <string>&amp;Create</string>
    </property>
    <property name="shortcut">
-    <string>Meta+C</string>
+    <string>Alt+C</string>
    </property>
    <property name="default">
     <bool>true</bool>
