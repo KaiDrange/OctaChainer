@@ -40,6 +40,8 @@ HEADERS  += mainwindow.h \
     libsndfile/includeOSX/sndfile.hh \
     libsndfile/macx/include/sndfile.h \
     libsndfile/macx/include/sndfile.hh \
+    libsndfile/win32/include/sndfile.h \
+    libsndfile/win32/include/sndfile.hh \
     otwriter.h \
     sliceListItem.h \
     tabmainwidget.h \
@@ -61,10 +63,10 @@ macx {
     ICON = $$PWD/icons/octachainer-logo.icns
 }
 win32 {
-    LIBS += -L$$PWD/libsndfile/lib/ -llibsndfile-1
-    INCLUDEPATH += $$PWD/libsndfile/include
-    DEPENDPATH += $$PWD/libsndfile/include
-    RC_ICONS += octachainer_logo.ico
+    LIBS += -L$$PWD/libsndfile/win32/lib/ -llibsndfile-1
+    INCLUDEPATH += $$PWD/libsndfile/win32/include
+    DEPENDPATH += $$PWD/libsndfile/win32/include
+    RC_ICONS += $$PWD/icons/octachainer_logo.ico
 }
 
 linux {
@@ -72,9 +74,3 @@ linux {
         LIBS+=-lsndfile
     }
 }
-
-DISTFILES += \
-    icons/octachainer-logo.icns \
-    libsndfile/lib/libsndfile.1.dylib \
-    libsndfile/lib/pkgconfig/sndfile.pc \
-    libsndfile/macx/lib/libsndfile.1.dylib
