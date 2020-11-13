@@ -34,10 +34,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     audiofactory.h \
     audioutil.h \
-    libsndfile/include/_oldsndfile.h \
-    libsndfile/include/_oldsndfile.hh \
-    libsndfile/includeOSX/sndfile.h \
-    libsndfile/includeOSX/sndfile.hh \
     libsndfile/macx/include/sndfile.h \
     libsndfile/macx/include/sndfile.hh \
     libsndfile/win32/include/sndfile.h \
