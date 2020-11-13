@@ -301,7 +301,7 @@ void TabMegabreakWidget::on_btnStop_clicked()
 
 void TabMegabreakWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    event->acceptProposedAction();
+    event->accept();
 }
 
 void TabMegabreakWidget::dropEvent(QDropEvent *event)

@@ -194,7 +194,7 @@ void TabGridWidget::on_btnStop_clicked()
 
 void TabGridWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    event->acceptProposedAction();
+    event->accept();
 }
 
 void TabGridWidget::dropEvent(QDropEvent *event)

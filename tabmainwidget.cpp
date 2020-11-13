@@ -191,7 +191,7 @@ void TabMainWidget::on_btnStop_clicked()
 
 void TabMainWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    event->acceptProposedAction();
+    event->accept();
 }
 
 void TabMainWidget::dropEvent(QDropEvent *event)
