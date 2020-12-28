@@ -238,11 +238,11 @@ void TabMainWidget::on_btnCreate_clicked()
     if (ui->listSlices->count() == 0)
             return;
 
-    int chainCount = (ui->listSlices->count() / 64) + 1;
+    int chainCount = ((ui->listSlices->count()-1) / 64) + 1;
     if (chainCount > 1)
     {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Warning: more than 64 chains", "This will create multiple wav files. Continue?", QMessageBox::Yes|QMessageBox::Cancel);
+        reply = QMessageBox::question(this, "Warning: more than 64 slices", "This will create multiple wav files. Continue?", QMessageBox::Yes|QMessageBox::Cancel);
         if (!(reply == QMessageBox::Yes))
             return;
     }
